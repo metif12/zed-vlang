@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    name: check + validate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Rust (stable + wasm target + rustfmt)
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-wasip1
+          components: rustfmt
+
+      - name: cargo check (host)
+        run: cargo check --verbose
+
+      - name: cargo check (wasm)
+        run: cargo check --target wasm32-wasip1
+
+      - name: cargo fmt --check
+        run: cargo fmt --all -- --check
+
+      - name: No stale VLS install pointer
+        # `v build-vls` does not exist in current V; the installer is
+        # `v ls --install`. Historical mentions must say "older guides".
+        run: |
+          if grep -rn "build-vls" --exclude-dir=target --exclude-dir=.git --exclude-dir=grammars . | grep -v "Older guides mention"; then
+            echo "stale 'v build-vls' reference found (current V uses 'v ls --install')"
+            exit 1
+          fi
+
+      - name: Validate manifests, snippets and queries
+        # TOML/JSON must parse, snippet entries need prefix+body, and every
+        # Tree-sitter node in languages/v/*.scm must exist in the pinned
+        # grammar's generated parser (Zed fails the whole language on one
+        # bad query). Needs network for the pinned node-types.json.
+        run: python3 scripts/check-extension.py
