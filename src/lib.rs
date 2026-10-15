@@ -13,11 +13,11 @@ impl zed::Extension for VlangExtension {
         worktree: &zed::Worktree,
     ) -> zed::Result<zed::Command> {
         // VLS publishes no standalone binaries, so there is nothing to
-        // download: use the server the user built and put on PATH.
+        // download: use the server the user installed and put on PATH.
         // `v ls --install` (from the V toolchain) is the way to get one.
         let command = worktree.which("vls").ok_or(
-            "vls not found on PATH. Install it with the V toolchain \
-             (`v ls --install`) and make sure `vls` is on PATH.",
+            "vls not found on PATH. Install it from https://github.com/vlang/vls \
+             with the V toolchain (`v ls --install`) and make sure `vls` is on PATH.",
         )?;
         Ok(zed::Command {
             command,
