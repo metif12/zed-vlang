@@ -1,7 +1,9 @@
-"""Extension self-checks: manifests parse, snippets are well-formed, and every
-Tree-sitter node referenced by languages/v/*.scm exists in the pinned
-grammar's generated parser (Zed builds from the grammar's checked-in
-src/parser.c and fails the whole language on one bad query).
+"""Extension self-checks: manifests parse, snippets are well-formed with
+unique prefixes (one prefix, one snippet), README/docs code fences parse,
+docs links resolve, and every Tree-sitter node referenced by
+languages/v/*.scm exists in the pinned grammar's generated parser (Zed
+builds from the grammar's checked-in src/parser.c and fails the whole
+language on one bad query).
 
 Usage: python3 scripts/check-extension.py  (exit nonzero on violation)
 """
@@ -51,6 +53,12 @@ def main() -> int:
                 fail(f"{path.name}:{name}: prefix must be a string")
             if not isinstance(snip.get("body"), list) or not snip["body"]:
                 fail(f"{path.name}:{name}: body must be a non-empty list")
+        prefixes = [snip["prefix"] for snip in data.values()
+                    if isinstance(snip.get("prefix"), str)]
+        dupes = sorted({p for p in set(prefixes) if prefixes.count(p) > 1})
+        if dupes:
+            fail(f"{path.name}: prefixes offered twice (one prefix, one "
+                 f"snippet — upstream PR #602): {dupes}")
     print(f"snippets: {total} entries across snippets/*.json")
     if total == 0:
         fail("no snippets found")
@@ -74,6 +82,30 @@ def main() -> int:
                 fail(f"{scm_path.name}: unknown node types for pinned parser: {bad}")
             else:
                 print(f"{scm_path.name}: {len(used)} named nodes, all known")
+
+    md_files = [ROOT / "README.md"] + sorted((ROOT / "docs").glob("*.md"))
+    fence = re.compile(r"```(\w+)\n(.*?)```", re.S)
+    for md_path in md_files:
+        if not md_path.exists():
+            continue
+        for lang, body in fence.findall(md_path.read_text(encoding="utf-8")):
+            try:
+                if lang == "json":
+                    json.loads(body)
+                elif lang == "toml":
+                    tomllib.loads(body)
+                else:
+                    continue
+            except Exception as e:  # noqa: BLE001 - report, don't crash CI
+                fail(f"{md_path.name}: unparsable ```{lang} block: {e}")
+    print(f"code fences parse in {len([p for p in md_files if p.exists()])} markdown files")
+
+    link = re.compile(r"\]\((\./[^)#\s]+)(?:#[^)\s]*)?\)")
+    for md_path in sorted((ROOT / "docs").glob("*.md")):
+        for target in link.findall(md_path.read_text(encoding="utf-8")):
+            if not (ROOT / "docs" / target).exists():
+                fail(f"{md_path.name}: links to missing {target}")
+    print("docs relative links resolve")
 
     if FAILURES:
         print(f"{len(FAILURES)} failure(s)")
