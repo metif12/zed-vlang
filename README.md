@@ -13,9 +13,16 @@ completion/diagnostics/code actions, and the same snippet set.
 
 - The V toolchain on `PATH` ([install](https://vlang.io)): `v --version`
   should print `V 0.5.x`.
-- VLS on `PATH`. VLS publishes no standalone binaries, so install it once
-  with the V toolchain (`v ls --install`) and make sure `vls` resolves:
-  `vls --version` should print `VLS 0.0.3` or newer.
+- VLS on `PATH`: `vls --version` should print `VLS 0.0.3` or newer.
+  VLS publishes no standalone binaries, so install it once with the
+  V toolchain and keep it on `PATH`:
+
+  ```sh
+  v ls --install
+  ```
+
+  (Older guides mention `v build-vls`; current V provides it as
+  `v ls --install`, which prints `VLS was updated to version: VLS 0.0.3`.)
 
 ## What you get
 
