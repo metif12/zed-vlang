@@ -9,5 +9,3 @@
   name: (type_identifier) @name) @item
 (interface_declaration
   name: (type_identifier) @name) @item
-(interface_declaration
-  name: (generic_type) @name) @item
