@@ -31,8 +31,10 @@ jobs:
       - name: No stale VLS install pointer
         # `v build-vls` does not exist in current V; the installer is
         # `v ls --install`. Historical mentions must say "older guides".
+        # (The step's own comment/echo are allowlisted so the check passes
+        # on a clean tree.)
         run: |
-          if grep -rn "build-vls" --exclude-dir=target --exclude-dir=.git --exclude-dir=grammars . | grep -v "Older guides mention"; then
+          if grep -rn "build-vls" --exclude-dir=target --exclude-dir=.git --exclude-dir=grammars . | grep -v -e "Older guides mention" -e "does not exist in current V" -e "stale 'v build-vls' reference found"; then
             echo "stale 'v build-vls' reference found (current V uses 'v ls --install')"
             exit 1
           fi
