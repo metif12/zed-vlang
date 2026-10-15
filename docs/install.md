@@ -38,6 +38,14 @@ Every step below was verified end-to-end (Zed 1.24.2, V 0.5.2, VLS 0.0.3).
 
 ## 2. Install the dev extension
 
+Get the sources first — either the stable release zip or a git checkout:
+
+- Stable: download `zed-vlang-v0.1.0.zip` from
+  [Releases](https://github.com/metif12/zed-vlang/releases) and extract it.
+- Latest: `git clone https://github.com/metif12/zed-vlang`.
+
+Then:
+
 1. In Zed, open the command palette and run `zed: install dev extension`.
 2. Select the checkout directory (the one containing `extension.toml`).
    If the folder dialog only navigates on Enter, confirm with its

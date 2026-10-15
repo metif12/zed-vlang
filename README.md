@@ -31,7 +31,14 @@ completion/diagnostics/code actions, and the same snippet set.
 
 ## Install
 
-There is no marketplace release; install the checkout as a dev extension:
+There is no marketplace release; install the sources as a dev extension.
+Get them either from the latest release zip or from git:
+
+- Stable: download `zed-vlang-v0.1.0.zip` from
+  [Releases](https://github.com/metif12/zed-vlang/releases) and extract it.
+- Latest: `git clone https://github.com/metif12/zed-vlang`.
+
+Then:
 
 1. Meet the [Requirements](#requirements) above (`v --version` and
    `vls --version` must both resolve).
