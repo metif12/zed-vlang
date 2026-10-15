@@ -1,3 +1,8 @@
+---
+layout: default
+title: Install
+---
+
 # Install
 
 There is no marketplace release; install the checkout as a dev extension.

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ page.title }} | {{ site.title }}</title>
+<meta name="description" content="{{ site.description }}">
+<link rel="stylesheet" href="{{ '/assets/style.css' | relative_url }}">
+</head>
+<body>
+<header class="topbar">
+  <nav class="wrap">
+    <a class="brand" href="{{ '/' | relative_url }}">V for Zed</a>
+    <span class="links">
+      <a href="{{ '/install.html' | relative_url }}">Install</a>
+      <a href="{{ '/troubleshooting.html' | relative_url }}">Troubleshooting</a>
+      <a href="{{ '/snippets.html' | relative_url }}">Snippets</a>
+      <a href="https://github.com/metif12/zed-vlang">GitHub</a>
+    </span>
+  </nav>
+</header>
+<main class="wrap content">
+{{ content }}
+</main>
+<footer class="wrap foot">
+  <span>V language support for Zed — MIT. Grammar: separate ISC dependency, never vendored.</span>
+  <span><a href="https://github.com/metif12/zed-vlang">Source</a></span>
+</footer>
+<script>
+document.querySelectorAll('pre').forEach(function (pre) {
+  var btn = document.createElement('button');
+  btn.className = 'copybtn';
+  btn.textContent = 'copy';
+  btn.addEventListener('click', function () {
+    var done = function () { btn.textContent = 'copied'; };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(pre.innerText).then(done, done);
+    }
+  });
+  pre.appendChild(btn);
+});
+</script>
+</body>
+</html>

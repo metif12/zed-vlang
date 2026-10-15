@@ -1,9 +1,58 @@
+---
+layout: default
+title: V language support for Zed
+---
+
+<div class="hero" markdown="1">
+
 # V language support for Zed
 
 Syntax highlighting, [VLS](https://github.com/vlang/vls) language server
 integration, snippets and task presets for the
 [V programming language](https://vlang.io) in the
 [Zed editor](https://zed.dev).
+
+<div class="btnrow" markdown="1">
+[Install guide](./install.md){: .btn } [GitHub](https://github.com/metif12/zed-vlang){: .btn .ghost }
+</div>
+
+</div>
+
+<div class="cards" markdown="1">
+
+<div class="card" markdown="1">
+
+### Highlighting
+
+Tree-sitter grammar with brackets, outline symbols and auto-indent.
+
+</div>
+
+<div class="card" markdown="1">
+
+### VLS server
+
+Completion, diagnostics, hover, rename and code actions from VLS.
+
+</div>
+
+<div class="card" markdown="1">
+
+### Snippets
+
+71 prefixes with working tab stops, synced with upstream.
+
+</div>
+
+<div class="card" markdown="1">
+
+### Tasks
+
+Copy-paste run/build/test/check/vet/fmt tasks for your project.
+
+</div>
+
+</div>
 
 Ported from the feature set of
 [`vscode-vlang`](https://github.com/vlang/vscode-vlang): the same

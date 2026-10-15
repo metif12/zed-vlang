@@ -1,3 +1,8 @@
+---
+layout: default
+title: Troubleshooting
+---
+
 # Troubleshooting
 
 All errors below were observed verbatim during verified installs

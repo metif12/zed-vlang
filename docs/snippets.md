@@ -1,3 +1,8 @@
+---
+layout: default
+title: Snippet reference
+---
+
 # Snippet reference
 
 71 snippets in snippets/v.json (scope dropped, first prefix kept from the VS Code originals; the 12 veb web-framework snippets from upstream PR 608 live in the same file because Zed matches snippet files by language name).
