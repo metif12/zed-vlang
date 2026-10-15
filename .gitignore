@@ -1,3 +1,6 @@
 ﻿target/
 .vscode-test/
+# Generated in place by `zed: install dev extension`, never commit:
+extension.wasm
+grammars/
 
