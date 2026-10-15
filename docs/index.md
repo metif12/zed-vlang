@@ -9,15 +9,14 @@ Ported from the feature set of
 [`vscode-vlang`](https://github.com/vlang/vscode-vlang): the same
 Tree-sitter-backed highlighting ideas, the same VLS-first approach to
 completion/diagnostics/code actions, and the same (superset) snippet set —
-our 59 snippets cover all 54 upstream ones, with fixed descriptions and
-richer tab stops. Upstream snippets have not changed since 2022; see the
-[snippet reference](./snippets.md).
+our 71 snippets cover all 54 upstream ones plus the 12 `veb` snippets from
+upstream PR #608, with fixed descriptions and richer tab stops.
 
 ## Contents
 
 - [Install](./install.md) — requirements, dev-extension install, verify checklist
 - [Troubleshooting](./troubleshooting.md) — every known install failure, verbatim
-- [Snippet reference](./snippets.md) — all 59 snippets with prefixes
+- [Snippet reference](./snippets.md) — all 71 snippets with prefixes
 
 ## Features
 
@@ -29,7 +28,7 @@ richer tab stops. Upstream snippets have not changed since 2022; see the
   automatically for V files. VLS-only by design: VLS publishes no
   standalone binaries, so the extension resolves your `PATH` install
   (`worktree.which("vls")`) instead of downloading anything.
-- **Snippets**: 59 prefixes (`fn`, `for`, `stru`, …) with working tab stops.
+- **Snippets**: 71 prefixes (`fn`, `for`, `stru`, `vapp`, …) with working tab stops.
 - **Tasks**: copy-paste `.zed/tasks.json` for run/build/test/fmt
   ([README](https://github.com/metif12/zed-vlang#what-you-get)).
 

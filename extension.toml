@@ -5,7 +5,7 @@ schema_version = 1
 authors = ["metif12 <metif12@gmail.com>"]
 description = "V language support for Zed: syntax highlighting, VLS language server, snippets and tasks"
 repository = "https://github.com/metif12/zed-vlang"
-snippets = ["./snippets/v.json"]
+snippets = ["./snippets/v.json", "./snippets/veb.json"]
 
 [grammars.v]
 repository = "https://github.com/undivisible/tree-sitter-v"

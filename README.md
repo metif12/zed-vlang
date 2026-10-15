@@ -50,7 +50,8 @@ If the install fails, the log names the exact cause; see
   references, rename, symbols and code actions (including Fill struct
   literal) from VLS, started automatically for V files.
 - **Snippets**: the 59-snippet V set (functions, structs, matches,
-  error handling, tests, numeric types).
+  error handling, tests, numeric types) plus 12 `veb` web-framework
+  snippets (`vapp`, `vget`, `vpst`, …), synced with upstream.
 - **Tasks**: extensions cannot ship tasks in Zed, so add these to your
   project's `.zed/tasks.json` (run with `task: spawn`). This mirrors the
   `V: Build` / `V: Run` / `V: Test` tasks of `vscode-vlang`:

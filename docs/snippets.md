@@ -1,6 +1,8 @@
 # Snippet reference
 
-59 snippets. Bodies live in [snippets/v.json](https://github.com/metif12/zed-vlang/blob/main/snippets/v.json); prefixes trigger completion (first prefix kept from the VS Code originals).
+71 snippets in two files (scope dropped, first prefix kept from the VS Code originals).
+
+## v.json (59) — bodies in [snippets/v.json](https://github.com/metif12/zed-vlang/blob/main/snippets/v.json)
 
 | Name | Prefix | Description |
 |---|---|---|
@@ -63,3 +65,20 @@
 | snippet.type.voidptr | vptr | Code snippet for void* |
 | snippet.unimpl | unimpl | Code snippet for unimplemented 'assert' |
 | snippet.unreach | unreach | Code snippet for unreachable 'assert' |
+
+## veb.json (12) — veb web-framework snippets from upstream PR #608, bodies in [snippets/veb.json](https://github.com/metif12/zed-vlang/blob/main/snippets/veb.json)
+
+| Name | Prefix | Description |
+|---|---|---|
+| snippet.veb.app | vapp | Code snippet for veb app skeleton with Context, App and veb.run |
+| snippet.veb.controller | vctl | Code snippet for veb controller registration |
+| snippet.veb.get | vget | Code snippet for veb GET route handler |
+| snippet.veb.json | vjsn | Code snippet for veb JSON result return with ctx.json |
+| snippet.veb.middleware | vmid | Code snippet for veb middleware handler registered with app.use |
+| snippet.veb.param | vpar | Code snippet for veb route with a path parameter |
+| snippet.veb.post | vpst | Code snippet for veb POST route handler with path |
+| snippet.veb.query.form | vctx | Code snippet for veb Context query and form access |
+| snippet.veb.tmpl | vtml | Code snippet for veb $veb.html() template embed |
+| snippet.veb.tmpl.for | vfor | Code snippet for veb template @for directive |
+| snippet.veb.tmpl.if | vif | Code snippet for veb template @if directive |
+| snippet.veb.tmpl.include | vinc | Code snippet for veb template @include directive |
