@@ -86,12 +86,41 @@ If the install fails, the log names the exact cause; see
     "command": "v",
     "args": ["fmt", "-w", "$ZED_FILE"],
     "cwd": "$ZED_WORKTREE_ROOT"
+  },
+  {
+    "label": "V: check workspace",
+    "command": "v",
+    "args": ["-check", "."],
+    "cwd": "$ZED_WORKTREE_ROOT"
+  },
+  {
+    "label": "V: vet workspace",
+    "command": "v",
+    "args": ["vet", "-W", "."],
+    "cwd": "$ZED_WORKTREE_ROOT"
+  },
+  {
+    "label": "V: optimized build",
+    "command": "v",
+    "args": ["-prod", "."],
+    "cwd": "$ZED_WORKTREE_ROOT"
+  },
+  {
+    "label": "V: emit C from current file",
+    "command": "v",
+    "args": ["-o", "out.c", "$ZED_FILE"],
+    "cwd": "$ZED_WORKTREE_ROOT"
   }
 ]
 ```
 
 The file must contain a JSON array (a bare object is rejected by Zed:
 `Failed to parse tasks file content as a JSON array`).
+
+Only `V: check workspace` runs without a C toolchain (`v -check`
+exit 0 on a bare install); the rest need working tcc/gcc like any V
+build. The set mirrors upstream's task enum
+(`build/run/test/prod/check/vet/fmt`).
 
 ## License
 
