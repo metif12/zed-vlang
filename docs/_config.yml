@@ -1,0 +1,3 @@
+title: V language support for Zed
+description: Syntax highlighting, VLS language server, snippets and tasks for the V programming language in the Zed editor.
+theme: minima
