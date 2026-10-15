@@ -31,13 +31,17 @@ completion/diagnostics/code actions, and the same snippet set.
   `.zed/tasks.json` (runnable with `task::Spawn`):
 
 ```json
-{
-  "label": "V: run current file",
-  "command": "v",
-  "args": ["run", "$ZED_FILE"],
-  "cwd": "$ZED_WORKTREE_ROOT"
-}
+[
+  {
+    "label": "V: run current file",
+    "command": "v",
+    "args": ["run", "$ZED_FILE"],
+    "cwd": "$ZED_WORKTREE_ROOT"
+  }
+]
 ```
+
+The file must contain a JSON array (a bare object is rejected by Zed).
 
 Replace `run` with `build`, `test .`, or `vet -W .` for the other
 shapes. `v fmt -w` formats; `v -o out.c file.v` emits C.
