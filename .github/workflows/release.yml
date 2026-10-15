@@ -1,0 +1,33 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: package + publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Package extension
+        # git archive ships tracked files only, so local build outputs
+        # (target/, grammars/, extension.wasm) are excluded by construction.
+        run: |
+          ver="${GITHUB_REF#refs/tags/}"
+          git archive --format=zip --prefix=zed-vlang/ \
+            --output="zed-vlang-${ver}.zip" HEAD
+          unzip -l "zed-vlang-${ver}.zip"
+
+      - name: Publish GitHub release
+        run: |
+          ver="${GITHUB_REF#refs/tags/}"
+          gh release create "$ver" "zed-vlang-${ver}.zip" \
+            --title "zed-vlang $ver" --generate-notes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
