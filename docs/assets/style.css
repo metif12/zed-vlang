@@ -82,7 +82,8 @@ body {
 
 .btn {
   display: inline-block;
-  background: var(--accent);
+  /* #4f87ff gives only 3.36:1 with white text; #3a6fe6 gives 4.57:1 (AA). */
+  background: #3a6fe6;
   color: #fff;
   padding: 9px 18px;
   border-radius: var(--radius);
@@ -94,6 +95,20 @@ body {
 .btn.ghost {
   background: transparent;
   border: 1px solid var(--border);
+  color: var(--text);
+}
+
+/* Must beat `.content a` (0-1-1): without this the primary button
+   inherits blue text on a blue background and is unreadable. */
+.content a.btn,
+.content a.btn:visited {
+  color: #fff;
+}
+
+.content a.btn:hover { text-decoration: none; }
+
+.content a.btn.ghost,
+.content a.btn.ghost:visited {
   color: var(--text);
 }
 
