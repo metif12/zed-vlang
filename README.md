@@ -1,5 +1,8 @@
 # V language support for Zed
 
+Documentation (install guide, troubleshooting, snippet reference):
+<https://metif12.github.io/zed-vlang/>
+
 Syntax highlighting, VLS language server integration, snippets and task
 presets for the [V programming language](https://vlang.io) in the
 [Zed editor](https://zed.dev).
