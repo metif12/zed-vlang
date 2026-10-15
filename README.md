@@ -34,8 +34,9 @@ completion/diagnostics/code actions, and the same snippet set.
   literal) from VLS, started automatically for V files.
 - **Snippets**: the 59-snippet V set (functions, structs, matches,
   error handling, tests, numeric types).
-- **Tasks**: no extension ships tasks in Zed; add these to your
-  `.zed/tasks.json` (runnable with `task::Spawn`):
+- **Tasks**: extensions cannot ship tasks in Zed, so add these to your
+  project's `.zed/tasks.json` (run with `task: spawn`). This mirrors the
+  `V: Build` / `V: Run` / `V: Test` tasks of `vscode-vlang`:
 
 ```json
 [
@@ -44,14 +45,30 @@ completion/diagnostics/code actions, and the same snippet set.
     "command": "v",
     "args": ["run", "$ZED_FILE"],
     "cwd": "$ZED_WORKTREE_ROOT"
+  },
+  {
+    "label": "V: build workspace",
+    "command": "v",
+    "args": ["build", "."],
+    "cwd": "$ZED_WORKTREE_ROOT"
+  },
+  {
+    "label": "V: test workspace",
+    "command": "v",
+    "args": ["test", "."],
+    "cwd": "$ZED_WORKTREE_ROOT"
+  },
+  {
+    "label": "V: format current file",
+    "command": "v",
+    "args": ["fmt", "-w", "$ZED_FILE"],
+    "cwd": "$ZED_WORKTREE_ROOT"
   }
 ]
 ```
 
-The file must contain a JSON array (a bare object is rejected by Zed).
-
-Replace `run` with `build`, `test .`, or `vet -W .` for the other
-shapes. `v fmt -w` formats; `v -o out.c file.v` emits C.
+The file must contain a JSON array (a bare object is rejected by Zed:
+`Failed to parse tasks file content as a JSON array`).
 
 ## License
 
