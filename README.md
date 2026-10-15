@@ -24,6 +24,23 @@ completion/diagnostics/code actions, and the same snippet set.
   (Older guides mention `v build-vls`; current V provides it as
   `v ls --install`, which prints `VLS was updated to version: VLS 0.0.3`.)
 
+## Install
+
+There is no marketplace release; install the checkout as a dev extension:
+
+1. Meet the [Requirements](#requirements) above (`v --version` and
+   `vls --version` must both resolve).
+2. In Zed, open the command palette and run `zed: install dev extension`,
+   then select the checkout directory (the one containing
+   `extension.toml`). Zed compiles the extension and the V grammar in a
+   few seconds; watch `zed: open log` for the
+   `extension::extension_builder` lines.
+3. Open any `.v`, `.vsh`, `.vh`, `.vv` or `v.mod` file. Zed starts VLS
+   automatically (`[lsp] starting language server process … vls.exe`).
+
+If the install fails, the log names the exact cause; see
+`docs/troubleshooting.md` for the known ones and their fixes.
+
 ## What you get
 
 - **Highlighting** for `.v`, `.vsh`, `.vh`, `.vv` and `v.mod` via the
