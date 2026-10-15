@@ -1,5 +1,7 @@
 # V language support for Zed
 
+[![CI](https://github.com/metif12/zed-vlang/actions/workflows/ci.yml/badge.svg)](https://github.com/metif12/zed-vlang/actions/workflows/ci.yml)
+
 Documentation (install guide, troubleshooting, snippet reference):
 <https://metif12.github.io/zed-vlang/>
 

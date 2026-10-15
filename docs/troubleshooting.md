@@ -83,6 +83,14 @@ ERROR [crates/worktree/src/worktree.rs:3600] working directory `grammars\v` not 
 Appears during every successful build; the build still finishes
 (`finished compiling extension … in ~4s`). Safe to ignore.
 
+## Snippets listed twice after repeated reinstalls
+
+After several `install dev extension` rounds without restarting Zed, a
+completion menu may show each snippet row twice. Fully quit Zed and reopen:
+with a clean restart every snippet is listed exactly once (verified for
+`fn` and `vapp`). This is Zed session state, not extension data — the
+registered set is correct.
+
 ## `v run` fails with tcc/GC errors
 
 ` tcc: error: unresolved reference to 'GC_MALLOC_UNCOLLECTABLE'` (plus a gcc
