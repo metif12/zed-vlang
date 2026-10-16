@@ -93,6 +93,8 @@ Open any `.v` file and confirm:
    it expands `fn name() { … }` with `$1`/`$0` tab stops (Tab moves on).
 5. **Outline/indent**: the outline panel lists functions; Enter after
    `fn main() {` indents the new line.
+6. **Format on save** (optional Zed setting): formats through VLS,
+   which advertises document formatting.
 
 For tasks, copy the array from the README into your project's
 `.zed/tasks.json` and run it with `task: spawn` — it must be a JSON
