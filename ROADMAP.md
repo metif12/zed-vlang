@@ -27,9 +27,8 @@ read this before opening a pull request so we do not duplicate each other.
   unmeasured — no task until one live run confirms the shape.
 - VLS 0.3: builds only with era-pinned V and needs `VLS_V_COMMAND`;
   stay on 0.0.3 with current V (see `docs/troubleshooting.md`).
-- Publish to the Zed extension registry (PR to
-  `zed-industries/extensions`): needs the publishing prerequisites
-  reviewed against this repo (grammar reuse rules, snippet scoping).
+
+Publishing to the Zed extension registry is out of scope by decision.
 
 ## Not portable (by design)
 
