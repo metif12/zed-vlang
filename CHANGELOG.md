@@ -1,14 +1,28 @@
 # Changelog
 
-All notable changes, per release tag. Only the `Unreleased` section moves
-without a tag.
+All notable changes, per release tag. Untagged work sits under
+`Unreleased`.
 
-## Unreleased
+## v0.6.0
 
 - Vim text objects (`textobjects.scm`): `af`/`if` over functions,
   `ac`/`ic` over structs, enums, interfaces and comments.
-- Scope overrides (`overrides.scm`): inclusive comments, string scopes.
-- `code_fence_block_name = "v"`: fenced V blocks highlight as V.
+- Scope overrides (`overrides.scm`): inclusive comment scope and string
+  scopes, mirroring the Go and Python extensions.
+- `code_fence_block_name = "v"`: fenced V blocks in Markdown highlight
+  as V.
+- Capability list now matches GUI proof: stars kept only where a
+  capability was watched working in Zed (go-to-definition and rename
+  lost theirs — they need V's V1 compatibility compiler, i.e. `make` on
+  `PATH`; references and folding gained theirs).
+- Troubleshooting gains that missing-compiler symptom (quoted verbatim
+  from the server log) and the harmless
+  `Error during workspace diagnostics pull` noise.
+- New `Configure VLS (limited)` install section: the three settings VLS
+  understands (`inlayHints`, `diagnostics`, `coverageDirectory`), plus
+  the measurement that Zed 1.24.2 changes no VLS behaviour for either
+  the nested or the flat payload shape.
+- `CHANGELOG.md` added, curated per tag from git history.
 - Install checklist notes format-on-save (via VLS formatting).
 
 ## v0.5.0
