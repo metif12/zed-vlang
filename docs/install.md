@@ -107,12 +107,18 @@ Open any `.v` file and confirm:
    it expands `fn name() { … }` with `$1`/`$0` tab stops (Tab moves on).
 5. **Outline/indent**: the outline panel lists functions; Enter after
    `fn main() {` indents the new line.
-6. **Format on save** (optional Zed setting): Zed asks VLS, and VLS runs
-   `v fmt -inprocess -w` on a copy of the buffer — measured on the pinned
-   build. If that invocation fails, the server answers with no edits and
-   says nothing, so treat format-on-save as unverified until you have
-   watched it reformat a file in the editor; `troubleshooting.md` has the
-   measured failure modes.
+6. **Formatting** (optional): VLS advertises formatting but returns no
+   edits (measured — see `troubleshooting.md`), so use Zed's external
+   formatter. Add to `settings.json`:
+   ```json
+   "languages": {
+     "V": {
+       "format_on_save": "on",
+       "formatter": { "external": { "command": "v", "arguments": ["fmt", "-"] } }
+     }
+   }
+   ```
+   Then `Ctrl-Alt-L` formats the current file, and saves format too.
 
 For tasks, copy the array from the README into your project's
 `.zed/tasks.json` and run it with `task: spawn` — it must be a JSON

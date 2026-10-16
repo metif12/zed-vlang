@@ -79,10 +79,13 @@ If the install fails, the log names the exact cause; see
   declaration, implementation and type-definition), references\*,
   rename, document and workspace symbols, call hierarchy, code actions
   (including the Fill struct literal), code lens (`vls.runFile`,
-  `vls.runTests`), document formatting, folding ranges\* and semantic
+  `vls.runTests`), document formatting†, folding ranges\* and semantic
   tokens. Go-to-definition and rename additionally need V's V1
   compatibility compiler (`make` on `PATH`); without it the server logs
   so explicitly while diagnostics and hover keep working.
+  † VLS advertises document formatting but answers with no edits for every
+  input (measured directly over LSP), so formatting goes through Zed's
+  external formatter — see the settings block below, verified working.
 - **Snippets**: 71 snippets in one set — the 59-snippet V set (functions,
   structs, matches, error handling, tests, numeric types) plus 12 `veb`
   web-framework snippets (`vapp`, `vget`, `vpst`, …), synced with upstream
@@ -102,10 +105,29 @@ If the install fails, the log names the exact cause; see
   task instead.
 
 Two tasks depend on your V being able to compile and format: `V: format
-current file` runs `v fmt -w`, and Zed's format-on-save reaches VLS,
-which runs `v fmt -inprocess -w` itself. If either is a no-op, run `v fmt
--w somefile.v` in a terminal first — `docs/troubleshooting.md` has the
-measured failure modes.
+current file` runs `v fmt -w`, and the external formatter below runs
+`v fmt -`. Check `v fmt -w somefile.v` in a terminal first if either is a
+no-op — `docs/troubleshooting.md` has the measured failure modes.
+
+## Formatting
+
+VLS's own formatting provider is inert on this build, so formatting goes
+through Zed's external formatter. Add this to your `settings.json`:
+
+```json
+"languages": {
+  "V": {
+    "format_on_save": "on",
+    "formatter": { "external": { "command": "v", "arguments": ["fmt", "-"] } }
+  }
+}
+```
+
+`v fmt -` reads the buffer on stdin and writes formatted V on stdout,
+which is the contract Zed expects. Measured on 1.24.2: `Ctrl-Alt-L`
+rewrites a mis-formatted file byte-identically to `v fmt -`, and saving
+formats too. Note the legacy per-language `"V": { … }` block is silently
+ignored on 1.24.2 — use `"languages"`.
 
 ```json
 [

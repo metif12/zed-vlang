@@ -170,27 +170,40 @@ rejects. Push diagnostics (squiggles, panel, hover popups) are unaffected
 
 ## Format Document / format on save changes nothing
 
-Zed asks VLS (`documentFormattingProvider` is advertised — measured on
-the pinned build), and VLS runs the real formatter itself. A proxy
-placed as `v.exe` on `PATH` recorded the exact call:
+VLS advertises `documentFormattingProvider` — measured on the pinned
+build — but the capability is inert: driven directly over JSON-RPC it
+answers `[]` for every input, including grossly mis-indented files and
+files with syntax errors, and it does so with a working `v` on `PATH`
+(six cases, all empty). A proxy placed as `v.exe` on `PATH` recorded the
+call it makes before giving up:
 
 ```text
 argv: [fmt] [-inprocess] [-w] <tempdir>\vls_fmt_<pid>_<ts>_1_<name>.v
 ```
 
-So a silent no-op means **that `v fmt` invocation failed**, and VLS says
-nothing: the failure is logged only in debug builds, so nothing reaches
-the Zed log and the LSP response is just `[]`. Check your compiler
-first:
+The failure is swallowed: that log line is debug-only, so nothing reaches
+the Zed log and the response is just `[]`.
 
-```console
-$ v fmt -w somefile.v   # exit 0 and the file changes = V can format
+Use Zed's external formatter instead — measured working on 1.24.2, in
+your `settings.json`:
+
+```json
+"languages": {
+  "V": {
+    "format_on_save": "on",
+    "formatter": { "external": { "command": "v", "arguments": ["fmt", "-"] } }
+  }
+}
 ```
 
-Measured on V 0.5.2 release + the pinned VLS: the request still came
-back empty, and VLS killed the child at its 30 s compiler timeout
-without reporting it. So format-on-save counts as unproven here, not as
-working — watch it reformat a file before you rely on it.
+`v fmt -` reads the buffer on stdin and writes formatted V on stdout
+(exit 0, empty stderr), which is exactly the contract Zed expects.
+Verified: `Ctrl-Alt-L` (`editor: format`) rewrote a mis-formatted file
+byte-identically to `v fmt -`, and `Ctrl+S` alone formatted and saved
+one. Two traps: on 1.24.2 a legacy per-language block (`"V": { … }` at
+the top level) is **silently ignored** — no warning at all — so use
+`"languages"`; and if you set `autosave` to anything but `off`, Zed
+ignores `format_on_save`.
 
 ## Every V build fails with a GC error
 

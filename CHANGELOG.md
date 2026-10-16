@@ -5,12 +5,15 @@ All notable changes, per release tag. Untagged work sits under
 
 ## Unreleased
 
-- Corrected the format-on-save claim with a measurement: a proxy `v.exe`
-  on `PATH` recorded VLS calling `v fmt -inprocess -w` on a temp copy of
-  the buffer, and a failed call answers `[]` with no message (the log
-  line is debug-only). The install checklist and troubleshooting now
-  mark format-on-save unproven rather than working, with the exact call
-  and the 30 s compiler-timeout kill.
+- Formatting, measured end to end on Zed 1.24.2: VLS advertises
+  `documentFormattingProvider` but answers with no edits for every input
+  (six cases driven directly over LSP, with a working `v` on `PATH`; a
+  proxy `v.exe` recorded the `v fmt -inprocess -w <temp copy>` call it
+  makes before giving up, logged only in debug builds). The docs now
+  ship the external formatter that does work — `v fmt -` on stdin, under
+  `"languages": {"V": {...}}`, verified with `Ctrl-Alt-L` and with
+  `Ctrl+S` alone — plus the trap that the legacy per-language `"V"` block
+  is silently ignored on 1.24.2.
 - New troubleshooting entry for `GC_MALLOC_UNCOLLECTABLE` / `GC_FREE` /
   `v_set_unhandled_exception_filter` implicit-declaration errors: a V
   whose generated `src.c` lacks those declarations fails every C build
