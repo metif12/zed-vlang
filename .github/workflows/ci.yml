@@ -5,10 +5,17 @@ on:
     branches: [main]
   pull_request:
 
+# Superseded runs on the same ref only waste minutes: a newer push makes
+# the older result unusable (mirrors upstream #572).
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   check:
     name: check + validate
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Checkout
         uses: actions/checkout@v7
