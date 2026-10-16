@@ -17,8 +17,10 @@ Every step below was verified end-to-end (Zed 1.24.2, V 0.5.2, VLS 0.0.3).
   # V 0.5.2 ...
   ```
 
-- VLS on `PATH`. VLS publishes no standalone binaries, so install it once
-  with the V toolchain (takes a few minutes to compile from source):
+- VLS: optional. A `PATH` install is used as-is (verified end-to-end on
+  `VLS 0.0.3`); otherwise the extension downloads its pinned build once
+  — approve Zed's one-time download prompt when it appears. To install
+  VLS yourself (takes a few minutes to compile from source):
 
   ```sh
   v ls --install

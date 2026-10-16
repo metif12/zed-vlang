@@ -3,12 +3,12 @@ layout: default
 title: Why PATH-only
 ---
 
-# Why PATH-only (and what managed mode would take)
+# Why PATH-first (and what managed mode took)
 
-The extension resolves its tools instead of downloading them:
-`src/lib.rs` looks up `vls` with `worktree.which("vls")` and reports a
-clear error otherwise. This page records why, and what dropping it would
-cost.
+The extension prefers your tools over downloading: `src/lib.rs` looks up
+`vls` with `worktree.which("vls")` first, and only then falls back to a
+pinned managed build. This page records why PATH comes first, and what
+the fallback cost.
 
 ## Why PATH-only
 
@@ -47,16 +47,28 @@ Pros: visual identity in the file tree. Cons: a second extension to
 maintain and publish for zero editor function, plus theme conflicts.
 Verdict: not worth it; revisit only if Zed gains language icons.
 
-## What managed downloads would take
+## What managed downloads took (done 2026-10-16)
 
-- VLS/V binaries we build, host and sign per platform, an update check,
-  and the `zed::LanguageServerBinary` download plumbing.
-- Pros: zero-setup install.
-- Cons: everything listed above, permanently. Blocked until VLS itself
-  publishes standalone binaries.
+The blocker above is gone: our fork ([metif12/vls](https://github.com/metif12/vls))
+merges the open upstream PRs and publishes per-platform zips
+(`vls-windows-x86_64.zip`, `vls-linux-x86_64.zip`, `vls-macos-aarch64.zip`)
+from a pinned tag. The extension is now a hybrid:
 
-## Verdict
+- `worktree.which("vls")` still wins — a user install stays paired with
+  its own V toolchain (which VLS shells out to). Nothing about existing
+  setups changed.
+- Otherwise the extension downloads the pinned tag once (cached per
+  version under its working directory), reports install status, and
+  needs the one-time `download_file` capability grant Zed prompts for.
+  Bumping the pinned tag is a deliberate, re-verified code change —
+  never floating.
 
-Stay PATH-only. Revisit managed mode only if VLS publishes binaries,
-and icons only if Zed gains language-level icon support.
+Remaining costs, accepted: whoever cuts the next `vls-N` tag owns the
+three-platform build; offline machines must bring their own `vls`.
+
+## Verdict (updated)
+
+PATH-first hybrid: PATH when present, pinned managed build otherwise.
+Stay that way; revisit only if upstream VLS publishes its own
+standalone binaries (then the fork can retire).
 Publishing to the Zed extension registry is out of scope by decision.
