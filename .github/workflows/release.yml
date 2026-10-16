@@ -18,9 +18,12 @@ jobs:
       - name: Package extension
         # git archive ships tracked files only, so local build outputs
         # (target/, grammars/, extension.wasm) are excluded by construction.
+        # No --prefix: the zip extracts flat files, so the folder you extract
+        # into IS the extension dir (select it directly; Zed needs the folder
+        # that contains extension.toml, not a wrapper around it).
         run: |
           ver="${GITHUB_REF#refs/tags/}"
-          git archive --format=zip --prefix=zed-vlang/ \
+          git archive --format=zip \
             --output="zed-vlang-${ver}.zip" HEAD
           unzip -l "zed-vlang-${ver}.zip"
 
