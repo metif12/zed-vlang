@@ -16,7 +16,9 @@ opening the palette. The folder dialog's Select Folder button must be
 clicked — Enter only navigates. And the palette shortcut follows your
 `base_keymap` (JetBrains maps it to Ctrl+Shift+A, not Ctrl+Shift+P);
 typing with a non-Latin keyboard layout lands in the editor instead of
-the palette, so switch to English first.
+the palette, so switch to English first. Tasks also need a folder
+worktree: opening a lone file roots the worktree at that file and
+`task: spawn` shows `No matches` — open the folder instead.
 
 ## `failed to fetch revision <sha>`
 
