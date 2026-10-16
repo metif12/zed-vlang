@@ -155,8 +155,8 @@ If the install fails, the log names the exact cause; see
   },
   {
     "label": "V: translate C to V (needs c2v)",
-    "command": "c2v",
-    "args": ["$ZED_FILE"],
+    "command": "if (Get-Command c2v -ErrorAction SilentlyContinue) { c2v \"$ZED_FILE\" } else { Write-Error \"c2v is not installed. Run: v install --git https://github.com/vlang/c2v ; then: v -g ~/.vmodules/c2v/ ; c2v also needs clang on PATH.\"; exit 1 }",
+    "args": [],
     "cwd": "$ZED_WORKTREE_ROOT",
     "save": "current"
   },

@@ -44,7 +44,9 @@ runnable as a Zed task.
 
 The README task `V: translate C to V (needs c2v)` runs the file through
 the [c2v](https://github.com/vlang/c2v) binary, which writes the sibling
-`.v` file itself. Prerequisites, verbatim from upstream:
+`.v` file itself. Like upstream, the task checks for the binary first
+and fails with setup instructions when it is missing. Prerequisites,
+verbatim from upstream:
 
 ```text
 c2v is not installed. Run `v install --git https://github.com/vlang/c2v`
@@ -53,4 +55,12 @@ c2v also needs a `clang` binary on your PATH.
 ```
 
 Save the `.c` file before spawning the task (upstream saves it for you;
-Zed tasks run on disk state).
+Zed tasks run on disk state — ours declares `"save": "current"`).
+
+The README task speaks Windows PowerShell (what Zed tasks use there).
+The POSIX equivalent, same behavior:
+
+```sh
+command -v c2v >/dev/null || { echo "c2v is not installed. Run: v install --git https://github.com/vlang/c2v ; then: v -g ~/.vmodules/c2v/ ; c2v also needs clang on PATH."; exit 1; }
+c2v "$ZED_FILE"
+```
