@@ -18,7 +18,9 @@ read this before opening a pull request so we do not duplicate each other.
 
 - `v.generateTests` as a one-click task: needs a V shipping
   `v cover --write-tests` (absent from V 0.5.2's help). Recipe lives in
-  `docs/tests.md` until then.
+  `docs/tests.md` until then. Upstream #607 narrows the same action to
+  the functions a coverage run never entered, which needs their coverage
+  state plumbed into the action — there is no equivalent input here.
 - `v.translateWithC2v` execution: needs `c2v` built plus `clang` on
   `PATH`. The README now ships the install half as a task
   (`V: install c2v (slow, one-time)`, upstream #617 does the same two
