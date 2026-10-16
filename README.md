@@ -68,9 +68,10 @@ If the install fails, the log names the exact cause; see
 - **Highlighting** for `.v`, `.vsh`, `.vh`, `.vv` and `v.mod` via the
   maintained [`tree-sitter-v`](https://github.com/undivisible/tree-sitter-v)
   grammar, plus bracket matching.
-- **Language server**: completion, diagnostics, hover, go-to-definition,
-  references, rename, symbols and code actions (including Fill struct
-  literal) from VLS, started automatically for V files.
+- **Language server**: completion, diagnostics, hover, inlay hints,
+  go-to-definition, references, rename, symbols and code actions
+  (including Fill struct literal) from VLS, started automatically
+  for V files.
 - **Snippets**: 71 snippets in one set — the 59-snippet V set (functions,
   structs, matches, error handling, tests, numeric types) plus 12 `veb`
   web-framework snippets (`vapp`, `vget`, `vpst`, …), synced with upstream
@@ -81,7 +82,9 @@ If the install fails, the log names the exact cause; see
   `V: Build` / `V: Run` / `V: Test` tasks of `vscode-vlang`.
   `fn main` and `fn test_*` also get inline Run buttons
   (`languages/v/runnables.scm`); they fire the tagged tasks, so keep the
-  `tags` on those two entries.
+  `tags` on those two entries. Replace `"v"` with your compiler's absolute
+  path if it is not on `PATH` (the equivalent of upstream's
+  `v.executablePath` setting).
 
 ```json
 [
@@ -139,6 +142,12 @@ If the install fails, the log names the exact cause; see
     "label": "V: emit C from current file",
     "command": "v",
     "args": ["-o", "out.c", "$ZED_FILE"],
+    "cwd": "$ZED_WORKTREE_ROOT"
+  },
+  {
+    "label": "V: translate C to V (needs c2v)",
+    "command": "c2v",
+    "args": ["$ZED_FILE"],
     "cwd": "$ZED_WORKTREE_ROOT"
   }
 ]
