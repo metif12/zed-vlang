@@ -78,6 +78,7 @@ upstream PR #608, with fixed descriptions and richer tab stops.
 - [Working with tests](./tests.md) — test/source toggle, skeletons, coverage, c2v
 - [Why the Rust shim stays](./why-rust-shim.md) — why a full-V port is not possible today
 - [Why managed-first](./why-path-only.md) — rationale, and what icons would cost
+- [Changelog](https://github.com/metif12/zed-vlang/blob/main/CHANGELOG.md) — what each release changed
 
 ## Features
 
@@ -89,14 +90,14 @@ upstream PR #608, with fixed descriptions and richer tab stops.
   Every capability below is advertised by the live VLS 0.0.3 server
   itself (read off its LSP `initialize` response), and the starred ones
   were additionally watched working in Zed: completion\*, diagnostics\*,
-  hover\*, signature help, inlay hints, go-to-definition\* (plus
-  declaration, implementation and type-definition), references, rename,
-  document and workspace symbols, call hierarchy, code actions
+  hover\*, signature help, inlay hints, go-to-definition (plus
+  declaration, implementation and type-definition), references\*,
+  rename, document and workspace symbols, call hierarchy, code actions
   (including the Fill struct literal), code lens (`vls.runFile`,
-  `vls.runTests`), document formatting, folding ranges and semantic
-  tokens. VLS-only by design: VLS publishes no
-  standalone binaries, so the extension resolves your `PATH` install
-  (`worktree.which("vls")`) instead of downloading anything.
+  `vls.runTests`), document formatting, folding ranges\* and semantic
+  tokens. Go-to-definition and rename additionally need V's V1
+  compatibility compiler (`make` on `PATH`). The extension uses its
+  pinned managed build first, with a `PATH` `vls` as fallback.
 - **Snippets**: 71 prefixes (`fn`, `for`, `stru`, `vapp`, …) with working tab stops.
 - **Tasks**: copy-paste `.zed/tasks.json` for run/build/test/fmt
   ([README](https://github.com/metif12/zed-vlang#what-you-get)).
