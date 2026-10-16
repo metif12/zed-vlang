@@ -40,24 +40,35 @@ a drop-in upgrade with current V (see
 The extension itself is version-agnostic: it resolves `vls` on `PATH`
 and speaks LSP stdio.
 
-- Rust with the `wasm32-wasip1` target, so Zed can compile the extension:
+- Rust with the wasm targets, so Zed can compile the extension:
 
   ```sh
-  rustup target add wasm32-wasip1
+  rustup target add wasm32-wasip1 wasm32-wasip2
   ```
+
+  Current Zed looks up `wasm32-wasip2`. If the log says rustup "could
+  not choose a version of rustc … no default is configured", Zed found
+  a rustup with an empty home (e.g. a package manager's): point
+  `RUSTUP_HOME` at the home that holds your toolchain, or run
+  `rustup default stable` there, and confirm
+  `rustup target list --installed` shows both wasm targets.
 
 ## 2. Install the dev extension
 
 Get the sources first — either the stable release zip or a git checkout:
 
-- Stable: download `zed-vlang-v0.1.0.zip` from
-  [Releases](https://github.com/metif12/zed-vlang/releases) and extract it.
+- Stable: download the latest `zed-vlang-vX.Y.Z.zip` from
+  [Releases](https://github.com/metif12/zed-vlang/releases) and extract
+  it into an empty folder.
 - Latest: `git clone https://github.com/metif12/zed-vlang`.
 
 Then:
 
 1. In Zed, open the command palette and run `zed: install dev extension`.
-2. Select the checkout directory (the one containing `extension.toml`).
+2. Select the folder that directly contains `extension.toml` — with a
+   fresh extraction that is the folder you extracted into, not an outer
+   wrapper and not `src/` (anything else fails with
+   `No extension manifest found`).
    If the folder dialog only navigates on Enter, confirm with its
    **Select Folder** button.
 3. Zed compiles the extension and the V grammar in a few seconds. Watch

@@ -43,8 +43,9 @@ completion/diagnostics/code actions, and the same snippet set.
 There is no marketplace release; install the sources as a dev extension.
 Get them either from the latest release zip or from git:
 
-- Stable: download `zed-vlang-v0.1.0.zip` from
-  [Releases](https://github.com/metif12/zed-vlang/releases) and extract it.
+- Stable: download the latest `zed-vlang-vX.Y.Z.zip` from
+  [Releases](https://github.com/metif12/zed-vlang/releases) and extract
+  it into an empty folder.
 - Latest: `git clone https://github.com/metif12/zed-vlang`.
 
 Then:

@@ -91,6 +91,28 @@ with a clean restart every snippet is listed exactly once (verified for
 `fn` and `vapp`). This is Zed session state, not extension data — the
 registered set is correct.
 
+## `No extension manifest found for extension X`
+
+The folder dialog was pointed at the wrong level: Zed needs the folder
+that directly contains `extension.toml`. With a release zip, that is the
+folder you extracted into (not an outer wrapper, not `src/`).
+
+## `failed to retrieve the wasm32-wasip2 target libdir`
+
+```text
+ERROR [extensions_ui] Failed to install dev extension: compiling Rust extension
+    failed to retrieve the `wasm32-wasip2` target libdir: error: rustup
+    could not choose a version of rustc to run, because one wasn't
+    specified explicitly, and no default is configured.
+```
+
+Zed found a `rustup` whose home holds no toolchain and no default (e.g. a
+package manager's rustup exporting an empty `RUSTUP_HOME`). Fix: point
+`RUSTUP_HOME` at the home that holds your toolchain (or run
+`rustup default stable` there), add both wasm targets
+(`rustup target add wasm32-wasip1 wasm32-wasip2`), and confirm
+`rustup target list --installed` lists them before retrying.
+
 ## `v run` fails with tcc/GC errors
 
 ` tcc: error: unresolved reference to 'GC_MALLOC_UNCOLLECTABLE'` (plus a gcc
