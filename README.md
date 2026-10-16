@@ -30,8 +30,9 @@ completion/diagnostics/code actions, and the same snippet set.
   (Older guides mention `v build-vls`; current V provides it as
   `v ls --install`, which prints `VLS was updated to version: VLS 0.0.3`.)
 
-  `v ls` has shipped since V 0.3.1 (PR `vlang/v#15009`) and `v build-vls`
-  never existed as a subcommand. The newer GitHub VLS tag `0.3` is not a
+  `v ls` has shipped since V 0.3.1 (PR `vlang/v#15009`).
+  `v build-vls` never existed as a subcommand — older guides used the name
+  for building VLS from source. The newer GitHub VLS tag `0.3` is not a
   drop-in upgrade: it builds only with era-pinned V, needs `VLS_V_COMMAND`
   pointing at that compiler, and has no `--version` flag — stay on `0.0.3`
   with current V. The extension itself is version-agnostic (it resolves
