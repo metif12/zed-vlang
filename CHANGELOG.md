@@ -3,6 +3,16 @@
 All notable changes, per release tag. Untagged work sits under
 `Unreleased`.
 
+## Unreleased
+
+- New task `V: install c2v (slow, one-time)`: fails fast without
+  `clang`, clones the module when it is absent, then builds it — the
+  portable half of upstream #617, whose `Install c2v` error action has
+  no Zed equivalent (no command API). POSIX variant documented.
+- Fixed a stale ROADMAP line that still claimed the extension never
+  downloads anything (it has shipped pinned VLS since 0.5.0).
+- CI cancels superseded runs per ref and both workflows cap job time.
+
 ## v0.6.0
 
 - Vim text objects (`textobjects.scm`): `af`/`if` over functions,

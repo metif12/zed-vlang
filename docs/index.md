@@ -99,7 +99,8 @@ upstream PR #608, with fixed descriptions and richer tab stops.
   compatibility compiler (`make` on `PATH`). The extension uses its
   pinned managed build first, with a `PATH` `vls` as fallback.
 - **Snippets**: 71 prefixes (`fn`, `for`, `stru`, `vapp`, …) with working tab stops.
-- **Tasks**: copy-paste `.zed/tasks.json` for run/build/test/fmt
+- **Tasks**: copy-paste `.zed/tasks.json` for run/build/test/fmt plus a
+  one-time c2v install
   ([README](https://github.com/metif12/zed-vlang#what-you-get)).
 
 ## Project links

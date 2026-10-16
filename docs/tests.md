@@ -57,10 +57,24 @@ c2v also needs a `clang` binary on your PATH.
 Save the `.c` file before spawning the task (upstream saves it for you;
 Zed tasks run on disk state — ours declares `"save": "current"`).
 
+The README task `V: install c2v (slow, one-time)` does the two setup
+steps for you, so the usual path is: install `clang`, spawn that task,
+then translate. Upstream reaches the same place from the other side —
+its c2v failure carries an `Install c2v` action — which Zed cannot
+express, since the extension API has no commands.
+
 The README task speaks Windows PowerShell (what Zed tasks use there).
 The POSIX equivalent, same behavior:
 
 ```sh
 command -v c2v >/dev/null || { echo "c2v is not installed. Run: v install --git https://github.com/vlang/c2v ; then: v -g ~/.vmodules/c2v/ ; c2v also needs clang on PATH."; exit 1; }
 c2v "$ZED_FILE"
+```
+
+Install task, POSIX equivalent of the README entry:
+
+```sh
+command -v clang >/dev/null || { echo "c2v needs a clang binary on PATH - install clang, then re-run this task" >&2; exit 1; }
+[ -d ~/.vmodules/c2v ] || v install --git https://github.com/vlang/c2v
+v -g ~/.vmodules/c2v/
 ```

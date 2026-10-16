@@ -95,7 +95,11 @@ If the install fails, the log names the exact cause; see
   (`languages/v/runnables.scm`); they fire the tagged tasks, so keep the
   `tags` on those two entries. Replace `"v"` with your compiler's absolute
   path if it is not on `PATH` (the equivalent of upstream's
-  `v.executablePath` setting).
+  `v.executablePath` setting). `V: install c2v (slow, one-time)` is the
+  portable half of upstream's c2v work: upstream can hang an
+  `Install c2v` action off the failure, Zed has no command API, so the
+  same two steps (`v install --git …`, `v -g ~/.vmodules/c2v/`) ship as a
+  task instead.
 
 ```json
 [
@@ -163,6 +167,12 @@ If the install fails, the log names the exact cause; see
     "args": ["-o", "out.c", "$ZED_FILE"],
     "cwd": "$ZED_WORKTREE_ROOT",
     "save": "current"
+  },
+  {
+    "label": "V: install c2v (slow, one-time)",
+    "command": "if (-not (Get-Command clang -ErrorAction SilentlyContinue)) { Write-Error 'c2v needs a clang binary on PATH - install clang, then re-run this task'; exit 1 }; if (Test-Path \"$env:USERPROFILE\\.vmodules\\c2v\") { Write-Output 'c2v source already cloned - rebuilding' } else { v install --git https://github.com/vlang/c2v }; v -g ~/.vmodules/c2v/",
+    "args": [],
+    "cwd": "$ZED_WORKTREE_ROOT"
   },
   {
     "label": "V: translate C to V (needs c2v)",

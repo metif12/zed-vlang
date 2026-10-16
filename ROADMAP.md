@@ -19,9 +19,11 @@ read this before opening a pull request so we do not duplicate each other.
 - `v.generateTests` as a one-click task: needs a V shipping
   `v cover --write-tests` (absent from V 0.5.2's help). Recipe lives in
   `docs/tests.md` until then.
-- `v.translateWithC2v` execution: needs `c2v` built
-  (`v install --git https://github.com/vlang/c2v`, `v -g ~/.vmodules/c2v/`)
-  plus `clang` on `PATH`. Task shape is documented.
+- `v.translateWithC2v` execution: needs `c2v` built plus `clang` on
+  `PATH`. The README now ships the install half as a task
+  (`V: install c2v (slow, one-time)`, upstream #617 does the same two
+  steps from an error action); the translation itself stays guarded with
+  setup instructions.
 - Playground sharing: endpoint is `POST <playgroundRoot>/share`
   (multipart `code` field, JSON `{hash}` back), but the round-trip is
   unmeasured — no task until one live run confirms the shape.
