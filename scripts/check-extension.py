@@ -108,6 +108,30 @@ def main() -> int:
                 fail(f"{md_path.name}: unparsable ```{lang} block: {e}")
     print(f"code fences parse in {len([p for p in md_files if p.exists()])} markdown files")
 
+    # The README tasks block is the copy-paste deliverable: Zed wants a JSON
+    # array, each entry needs a unique label and a command.
+    for lang, body in fence.findall((ROOT / "README.md").read_text(encoding="utf-8")):
+        if lang != "json" or '"label"' not in body:
+            continue
+        try:
+            tasks = json.loads(body)
+        except json.JSONDecodeError:
+            continue  # already reported by the fence loop above
+        if not isinstance(tasks, list):
+            fail("README.md: tasks block must be a JSON array (Zed rejects a bare object)")
+            continue
+        labels = [t.get("label") if isinstance(t, dict) else None for t in tasks]
+        if any(not isinstance(l, str) or not l for l in labels):
+            fail("README.md: every task needs a non-empty string label")
+        no_cmd = [l for t, l in zip(tasks, labels)
+                  if isinstance(t, dict) and not isinstance(t.get("command"), str)]
+        if no_cmd:
+            fail(f"README.md: tasks without a command: {no_cmd}")
+        dupes = sorted({l for l in labels if l and labels.count(l) > 1})
+        if dupes:
+            fail(f"README.md: duplicate task labels: {dupes}")
+        print(f"README.md: {len(tasks)} tasks, labels unique")
+
     link = re.compile(r"\]\((\./[^)#\s]+)(?:#[^)\s]*)?\)")
     for md_path in sorted((ROOT / "docs").glob("*.md")):
         for target in link.findall(md_path.read_text(encoding="utf-8")):
