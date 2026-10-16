@@ -5,15 +5,18 @@ All notable changes, per release tag. Untagged work sits under
 
 ## Unreleased
 
-- Corrected the format-on-save claim with a measurement: VLS runs
-  `v fmt -inprocess -w` itself, and when that fails it answers with no
-  edits and logs nothing outside debug builds. The install checklist now
-  sends you to `v fmt -w` in a terminal first, and the README flags the
-  two tasks that need a compiling, formatting V.
-- New troubleshooting entry for `GC_MALLOC_UNCOLLECTABLE` /
-  `GC_FREE` / `v_set_unhandled_exception_filter` implicit-declaration
-  errors: V's `vlib/builtin/c` is missing from the install, so `v fmt`,
-  `v build` and `v run` fail while VLS keeps working.
+- Corrected the format-on-save claim with a measurement: a proxy `v.exe`
+  on `PATH` recorded VLS calling `v fmt -inprocess -w` on a temp copy of
+  the buffer, and a failed call answers `[]` with no message (the log
+  line is debug-only). The install checklist and troubleshooting now
+  mark format-on-save unproven rather than working, with the exact call
+  and the 30 s compiler-timeout kill.
+- New troubleshooting entry for `GC_MALLOC_UNCOLLECTABLE` / `GC_FREE` /
+  `v_set_unhandled_exception_filter` implicit-declaration errors: a V
+  whose generated `src.c` lacks those declarations fails every C build
+  (`v fmt`, `v build`, `v run`) under tcc and gcc alike, while VLS keeps
+  working. Verified that a V 0.5.2 release build formats the same file
+  on the same machine.
 - New task `V: install c2v (slow, one-time)`: fails fast without
   `clang`, clones the module when it is absent, then builds it — the
   portable half of upstream #617, whose `Install c2v` error action has

@@ -171,17 +171,26 @@ rejects. Push diagnostics (squiggles, panel, hover popups) are unaffected
 ## Format Document / format on save changes nothing
 
 Zed asks VLS (`documentFormattingProvider` is advertised — measured on
-the pinned build), and VLS runs the real formatter itself:
-`v fmt -inprocess -w` on a temporary copy of the buffer. So a silent
-no-op means **`v fmt` failed**, not that Zed skipped the request. The
-server logs that failure only in debug builds, so nothing reaches the
-Zed log; the LSP response is simply `[]`.
+the pinned build), and VLS runs the real formatter itself. A proxy
+placed as `v.exe` on `PATH` recorded the exact call:
 
-Check it directly first:
+```text
+argv: [fmt] [-inprocess] [-w] <tempdir>\vls_fmt_<pid>_<ts>_1_<name>.v
+```
+
+So a silent no-op means **that `v fmt` invocation failed**, and VLS says
+nothing: the failure is logged only in debug builds, so nothing reaches
+the Zed log and the LSP response is just `[]`. Check your compiler
+first:
 
 ```console
 $ v fmt -w somefile.v   # exit 0 and the file changes = V can format
 ```
+
+Measured on V 0.5.2 release + the pinned VLS: the request still came
+back empty, and VLS killed the child at its 30 s compiler timeout
+without reporting it. So format-on-save counts as unproven here, not as
+working — watch it reformat a file before you rely on it.
 
 ## Every V build fails with a GC error
 
@@ -194,12 +203,15 @@ src.c:1374:19: error: implicit declaration of function
 'GC_MALLOC_UNCOLLECTABLE' [-Wimplicit-function-declaration]
 ```
 
-This is V, not Zed: the generated `src.c` is missing the declarations
-that live in V's C runtime directory. On a checkout where
-`vlib/builtin/c` is absent, `v fmt`, `v build` and `v run` all fail this
-way while VLS keeps working (its diagnostics come from its own parser,
-not from a C build). Reinstall or upgrade V so `vlib/builtin/c` is
-present — on a Windows install that is `C:\Users\<you>\v\vlib\builtin\c`.
+This is V, not Zed: the generated `src.c` is emitted without the
+declarations for the GC runtime and the unhandled-exception setter, so
+every C build fails — `v fmt`, `v build`, `v run` — with tcc and with
+gcc alike, and even after clearing the `v_0` build cache. VLS keeps
+working because its diagnostics come from its own parser, not from a C
+build. A V 0.5.2 *release* build formats the same file correctly on the
+same machine, so compare with a release build before suspecting your C
+toolchain; a V checkout whose C generation is broken this way needs a
+different V (or a fix upstream).
 
 ## Managed VLS download fails or never starts
 
