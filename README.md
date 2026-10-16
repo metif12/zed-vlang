@@ -93,61 +93,77 @@ If the install fails, the log names the exact cause; see
     "command": "v",
     "args": ["run", "$ZED_FILE"],
     "cwd": "$ZED_WORKTREE_ROOT",
-    "tags": ["v-main"]
+    "tags": ["v-main"],
+    "save": "current"
   },
   {
     "label": "V: build workspace",
     "command": "v",
     "args": ["build", "."],
-    "cwd": "$ZED_WORKTREE_ROOT"
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "save": "all"
   },
   {
     "label": "V: test workspace",
     "command": "v",
     "args": ["test", "."],
-    "cwd": "$ZED_WORKTREE_ROOT"
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "save": "all"
   },
   {
     "label": "V: test current file",
     "command": "v",
     "args": ["test", "$ZED_FILE"],
     "cwd": "$ZED_WORKTREE_ROOT",
-    "tags": ["v-test"]
+    "tags": ["v-test"],
+    "save": "current"
   },
   {
     "label": "V: format current file",
     "command": "v",
     "args": ["fmt", "-w", "$ZED_FILE"],
-    "cwd": "$ZED_WORKTREE_ROOT"
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "save": "current"
   },
   {
     "label": "V: check workspace",
     "command": "v",
     "args": ["-check", "."],
-    "cwd": "$ZED_WORKTREE_ROOT"
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "save": "all"
   },
   {
     "label": "V: vet workspace",
     "command": "v",
     "args": ["vet", "-W", "."],
-    "cwd": "$ZED_WORKTREE_ROOT"
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "save": "all"
   },
   {
     "label": "V: optimized build",
     "command": "v",
     "args": ["-prod", "."],
-    "cwd": "$ZED_WORKTREE_ROOT"
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "save": "all"
   },
   {
     "label": "V: emit C from current file",
     "command": "v",
     "args": ["-o", "out.c", "$ZED_FILE"],
-    "cwd": "$ZED_WORKTREE_ROOT"
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "save": "current"
   },
   {
     "label": "V: translate C to V (needs c2v)",
     "command": "c2v",
     "args": ["$ZED_FILE"],
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "save": "current"
+  },
+  {
+    "label": "V: show V version",
+    "command": "v",
+    "args": ["--version"],
     "cwd": "$ZED_WORKTREE_ROOT"
   }
 ]
@@ -155,6 +171,10 @@ If the install fails, the log names the exact cause; see
 
 The file must contain a JSON array (a bare object is rejected by Zed:
 `Failed to parse tasks file content as a JSON array`).
+
+File tasks save the current buffer first (`"save": "current"`), workspace
+tasks save everything (`"save": "all"`) — mirroring upstream, which saves
+before running.
 
 Only `V: check workspace` runs without a C toolchain (`v -check`
 exit 0 on a bare install); the rest need working tcc/gcc like any V
