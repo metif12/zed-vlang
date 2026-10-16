@@ -66,6 +66,7 @@ upstream PR #608, with fixed descriptions and richer tab stops.
 - [Install](./install.md) — requirements, dev-extension install, verify checklist
 - [Troubleshooting](./troubleshooting.md) — every known install failure, verbatim
 - [Snippet reference](./snippets.md) — all 71 snippets with prefixes
+- [Why the Rust shim stays](./why-rust-shim.md) — why a full-V port is not possible today
 
 ## Features
 
