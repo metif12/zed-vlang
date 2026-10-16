@@ -34,10 +34,12 @@ Publishing to the Zed extension registry is out of scope by decision.
 
 - File icons (`#598`): icon themes own file icons in Zed, not language
   extensions.
-- Managed VLS/V toolchain install, update checks, executable picker
+- V toolchain install, update checks, executable picker
   (`v.install`, `v.tools.checkForUpdates`, `v.selectExecutable`, #597's
-  server-identity gate, #596): this extension is PATH-only by design —
-  it resolves `vls` and never downloads.
+  server-identity gate, #596): Zed exposes no API to offer a toolchain
+  picker or update check, and the VLS side already ships pinned, so
+  these stay unimplemented. The pinned VLS download added in 0.5.0 is
+  a plain release asset, not this API.
 - Coverage gutters, test explorer, playground webview, VPM UI, skills UI,
   status bar, debugger launch, CodeLens popups, quick-pick dialogs
   (`#565` UI shell, `#601` command shell, `#607` lightbulb,
