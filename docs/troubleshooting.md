@@ -145,6 +145,29 @@ provides) was measured side-by-side and does not work with current V:
 
 Stay on `0.0.3` with current V.
 
+## Go-to-definition / rename do nothing
+
+```text
+vls: the configured V compiler cannot serve completion, hover, signature
+help, or go to definition, because its V1 compatibility compiler is
+missing… Diagnostics and formatting are unaffected.
+```
+
+Those features need V's V1 compatibility compiler, which needs `make` on
+`PATH`. Without it the server says so explicitly; diagnostics and hover
+keep working regardless. Rename and code actions were likewise never
+observed working without it.
+
+## `Error during workspace diagnostics pull`
+
+```text
+ERROR … failed to deserialize response … WorkspaceDiagnosticReportResult
+```
+
+Log noise: VLS answers workspace pull diagnostics with `[]`, which Zed
+rejects. Push diagnostics (squiggles, panel, hover popups) are unaffected
+— safe to ignore.
+
 ## Managed VLS download fails or never starts
 
 The extension uses its pinned build first (`metif12/vls` tag `vls-2`),

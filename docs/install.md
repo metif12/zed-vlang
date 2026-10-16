@@ -52,9 +52,23 @@ and speaks LSP stdio.
   Current Zed looks up `wasm32-wasip2`. If the log says rustup "could
   not choose a version of rustc … no default is configured", Zed found
   a rustup with an empty home (e.g. a package manager's): point
-  `RUSTUP_HOME` at the home that holds your toolchain, or run
-  `rustup default stable` there, and confirm
-  `rustup target list --installed` shows both wasm targets.
+   `RUSTUP_HOME` at the home that holds your toolchain, or run
+   `rustup default stable` there, and confirm
+   `rustup target list --installed` shows both wasm targets.
+
+## Configure VLS (limited)
+
+VLS understands three settings over LSP `workspace/didChangeConfiguration`
+(read off its source): `inlayHints` (bool, or `{enabled, variableTypes,
+parameterNames}`), `diagnostics` (bool, or `{enabled}`), and
+`coverageDirectory` (string) — all under a `vls` key.
+
+In practice, Zed 1.24.2 was observed **not** to change VLS behavior for
+either shape: neither
+`{"lsp": {"vls": {"settings": {"vls": {"diagnostics": false}}}}}`
+nor the flat `{"diagnostics": false}` variant cleared squiggles across
+server restarts. Do not rely on these settings in Zed until re-measured
+on a newer version.
 
 ## 2. Install the dev extension
 

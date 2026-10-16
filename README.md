@@ -75,12 +75,14 @@ If the install fails, the log names the exact cause; see
   Every capability below is advertised by the live VLS 0.0.3 server
   itself (read off its LSP `initialize` response), and the starred ones
   were additionally watched working in Zed: completion\*, diagnostics\*,
-  hover\*, signature help, inlay hints, go-to-definition\* (plus
-  declaration, implementation and type-definition), references, rename,
-  document and workspace symbols, call hierarchy, code actions
+  hover\*, signature help, inlay hints, go-to-definition (plus
+  declaration, implementation and type-definition), references\*,
+  rename, document and workspace symbols, call hierarchy, code actions
   (including the Fill struct literal), code lens (`vls.runFile`,
-  `vls.runTests`), document formatting, folding ranges and semantic
-  tokens.
+  `vls.runTests`), document formatting, folding ranges\* and semantic
+  tokens. Go-to-definition and rename additionally need V's V1
+  compatibility compiler (`make` on `PATH`); without it the server logs
+  so explicitly while diagnostics and hover keep working.
 - **Snippets**: 71 snippets in one set — the 59-snippet V set (functions,
   structs, matches, error handling, tests, numeric types) plus 12 `veb`
   web-framework snippets (`vapp`, `vget`, `vpst`, …), synced with upstream
