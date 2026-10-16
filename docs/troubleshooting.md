@@ -188,10 +188,12 @@ Use Zed's external formatter instead — measured working on 1.24.2, in
 your `settings.json`:
 
 ```json
-"languages": {
-  "V": {
-    "format_on_save": "on",
-    "formatter": { "external": { "command": "v", "arguments": ["fmt", "-"] } }
+{
+  "languages": {
+    "V": {
+      "format_on_save": "on",
+      "formatter": { "external": { "command": "v", "arguments": ["fmt", "-"] } }
+    }
   }
 }
 ```

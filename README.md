@@ -115,10 +115,12 @@ VLS's own formatting provider is inert on this build, so formatting goes
 through Zed's external formatter. Add this to your `settings.json`:
 
 ```json
-"languages": {
-  "V": {
-    "format_on_save": "on",
-    "formatter": { "external": { "command": "v", "arguments": ["fmt", "-"] } }
+{
+  "languages": {
+    "V": {
+      "format_on_save": "on",
+      "formatter": { "external": { "command": "v", "arguments": ["fmt", "-"] } }
+    }
   }
 }
 ```

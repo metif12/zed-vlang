@@ -111,10 +111,12 @@ Open any `.v` file and confirm:
    edits (measured — see `troubleshooting.md`), so use Zed's external
    formatter. Add to `settings.json`:
    ```json
-   "languages": {
-     "V": {
-       "format_on_save": "on",
-       "formatter": { "external": { "command": "v", "arguments": ["fmt", "-"] } }
+   {
+     "languages": {
+       "V": {
+         "format_on_save": "on",
+         "formatter": { "external": { "command": "v", "arguments": ["fmt", "-"] } }
+       }
      }
    }
    ```
