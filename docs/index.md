@@ -32,7 +32,8 @@ Tree-sitter grammar with brackets, outline symbols and auto-indent.
 
 ### VLS server
 
-Completion, diagnostics, hover, rename and code actions from VLS.
+Completion, diagnostics, hover, signature help, inlay hints, rename,
+symbols, call hierarchy and code actions — read off the live server.
 
 </div>
 
@@ -46,9 +47,17 @@ Completion, diagnostics, hover, rename and code actions from VLS.
 
 <div class="card" markdown="1">
 
+### Run buttons
+
+Inline Run on `fn main` and `fn test_*`, wired to tagged tasks.
+
+</div>
+
+<div class="card" markdown="1">
+
 ### Tasks
 
-Copy-paste run/build/test/check/vet/fmt tasks for your project.
+Copy-paste run/build/test/check/vet/fmt/prod tasks for your project.
 
 </div>
 
@@ -71,12 +80,20 @@ upstream PR #608, with fixed descriptions and richer tab stops.
 
 ## Features
 
-- **Highlighting** for `.v`, `.vsh`, `.vh`, `.vv` and `v.mod` via the
+- **Editing** for `.v`, `.vsh`, `.vh`, `.vv` and `v.mod` via the
   maintained [`tree-sitter-v`](https://github.com/undivisible/tree-sitter-v)
-  grammar, plus bracket matching, outline symbols and auto-indent.
-- **Language server**: completion, diagnostics, hover, go-to-definition,
-  references, rename, symbols and code actions from VLS, started
-  automatically for V files. VLS-only by design: VLS publishes no
+  grammar: syntax highlighting, bracket matching, outline symbols,
+  auto-indent, and inline Run buttons on `fn main` and `fn test_*`.
+- **Language server** from VLS (started automatically for V files).
+  Every capability below is advertised by the live VLS 0.0.3 server
+  itself (read off its LSP `initialize` response), and the starred ones
+  were additionally watched working in Zed: completion\*, diagnostics\*,
+  hover\*, signature help, inlay hints, go-to-definition\* (plus
+  declaration, implementation and type-definition), references, rename,
+  document and workspace symbols, call hierarchy, code actions
+  (including the Fill struct literal), code lens (`vls.runFile`,
+  `vls.runTests`), document formatting, folding ranges and semantic
+  tokens. VLS-only by design: VLS publishes no
   standalone binaries, so the extension resolves your `PATH` install
   (`worktree.which("vls")`) instead of downloading anything.
 - **Snippets**: 71 prefixes (`fn`, `for`, `stru`, `vapp`, …) with working tab stops.

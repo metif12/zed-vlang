@@ -65,13 +65,21 @@ If the install fails, the log names the exact cause; see
 
 ## What you get
 
-- **Highlighting** for `.v`, `.vsh`, `.vh`, `.vv` and `v.mod` via the
+- **Editing** for `.v`, `.vsh`, `.vh`, `.vv` and `v.mod` via the
   maintained [`tree-sitter-v`](https://github.com/undivisible/tree-sitter-v)
-  grammar, plus bracket matching.
-- **Language server**: completion, diagnostics, hover, inlay hints,
-  go-to-definition, references, rename, symbols and code actions
-  (including Fill struct literal) from VLS, started automatically
-  for V files.
+  grammar: syntax highlighting, bracket matching, outline symbols,
+  auto-indent, and inline Run buttons on `fn main` and `fn test_*`
+  (via `runnables.scm`, wired to the tagged tasks below).
+- **Language server** from VLS (started automatically for V files).
+  Every capability below is advertised by the live VLS 0.0.3 server
+  itself (read off its LSP `initialize` response), and the starred ones
+  were additionally watched working in Zed: completion\*, diagnostics\*,
+  hover\*, signature help, inlay hints, go-to-definition\* (plus
+  declaration, implementation and type-definition), references, rename,
+  document and workspace symbols, call hierarchy, code actions
+  (including the Fill struct literal), code lens (`vls.runFile`,
+  `vls.runTests`), document formatting, folding ranges and semantic
+  tokens.
 - **Snippets**: 71 snippets in one set — the 59-snippet V set (functions,
   structs, matches, error handling, tests, numeric types) plus 12 `veb`
   web-framework snippets (`vapp`, `vget`, `vpst`, …), synced with upstream
