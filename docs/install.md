@@ -30,6 +30,16 @@ Every step below was verified end-to-end (Zed 1.24.2, V 0.5.2, VLS 0.0.3).
   `v ls --install`.) Launch Zed from a shell where `vls` resolves —
   the extension inherits Zed's `PATH`.
 
+### Version compatibility
+
+`v ls` has shipped since V 0.3.1 (PR `vlang/v#15009`, commit `235ef23`,
+2022-07-11); `v build-vls` never existed as a subcommand. Verified
+end-to-end on V 0.5.2 + VLS 0.0.3. The newer GitHub VLS tag `0.3` is not
+a drop-in upgrade with current V (see
+[Troubleshooting](./troubleshooting.md#vls-03-is-not-a-drop-in-upgrade)).
+The extension itself is version-agnostic: it resolves `vls` on `PATH`
+and speaks LSP stdio.
+
 - Rust with the `wasm32-wasip1` target, so Zed can compile the extension:
 
   ```sh

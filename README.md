@@ -17,8 +17,9 @@ completion/diagnostics/code actions, and the same snippet set.
 ## Requirements
 
 - The V toolchain on `PATH` ([install](https://vlang.io)): `v --version`
-  should print `V 0.5.x`.
-- VLS on `PATH`: `vls --version` should print `VLS 0.0.3` or newer.
+  should print `V 0.5.x` (verified end-to-end on `V 0.5.2`).
+- VLS on `PATH`: `vls --version` should print `VLS 0.0.3` (what
+  `v ls --install` provides; verified end-to-end — see below).
   VLS publishes no standalone binaries, so install it once with the
   V toolchain and keep it on `PATH`:
 
@@ -28,6 +29,13 @@ completion/diagnostics/code actions, and the same snippet set.
 
   (Older guides mention `v build-vls`; current V provides it as
   `v ls --install`, which prints `VLS was updated to version: VLS 0.0.3`.)
+
+  `v ls` has shipped since V 0.3.1 (PR `vlang/v#15009`) and `v build-vls`
+  never existed as a subcommand. The newer GitHub VLS tag `0.3` is not a
+  drop-in upgrade: it builds only with era-pinned V, needs `VLS_V_COMMAND`
+  pointing at that compiler, and has no `--version` flag — stay on `0.0.3`
+  with current V. The extension itself is version-agnostic (it resolves
+  `vls` on `PATH` and speaks LSP stdio).
 
 ## Install
 

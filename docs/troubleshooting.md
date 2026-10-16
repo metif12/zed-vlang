@@ -96,3 +96,17 @@ registered set is correct.
 ` tcc: error: unresolved reference to 'GC_MALLOC_UNCOLLECTABLE'` (plus a gcc
 fallback failing for missing `make`) is the V toolchain on that machine,
 not this extension — `v -gc none run` works around it.
+
+## VLS 0.3 is not a drop-in upgrade
+
+The GitHub VLS tag `0.3` (newer than the `VLS 0.0.3` that `v ls --install`
+provides) was measured side-by-side and does not work with current V:
+
+- its source uses a removed `pref` API, so it does not compile with
+  V 0.5.2 — it needs its era-pinned compiler;
+- hover/definition shell out to `v`, so without `VLS_V_COMMAND` pointing
+  at that pinned compiler, hover answers `null`;
+- it has no `--version` flag (it reports version `0.0.2` in the LSP
+  `initialize` response instead).
+
+Stay on `0.0.3` with current V.
