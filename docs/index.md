@@ -77,7 +77,7 @@ upstream PR #608, with fixed descriptions and richer tab stops.
 - [Snippet reference](./snippets.md) — all 71 snippets with prefixes
 - [Working with tests](./tests.md) — test/source toggle, skeletons, coverage, c2v
 - [Why the Rust shim stays](./why-rust-shim.md) — why a full-V port is not possible today
-- [Why PATH-only](./why-path-only.md) — rationale, and what managed mode or icons would cost
+- [Why managed-first](./why-path-only.md) — rationale, and what icons would cost
 
 ## Features
 

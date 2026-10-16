@@ -147,9 +147,8 @@ Stay on `0.0.3` with current V.
 
 ## Managed VLS download fails or never starts
 
-Without a `PATH` `vls`, the extension downloads its pinned build once
-(`metif12/vls` tag `vls-1`). Two things can stop it: Zed prompts once
-for the `download_file` capability — declining leaves no server (approve
-it, or install VLS yourself instead). And offline machines get the
-download error verbatim — bring your own `vls` on `PATH`, which always
-takes precedence anyway.
+The extension uses its pinned build first (`metif12/vls` tag `vls-2`),
+so without a download there is no server. Two things can stop it: Zed
+prompts once for the `download_file` capability — declining leaves no
+server (approve it, or put a `vls` on `PATH`, which is still respected
+as fallback). And offline machines get the download error verbatim.

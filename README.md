@@ -18,10 +18,11 @@ completion/diagnostics/code actions, and the same snippet set.
 
 - The V toolchain on `PATH` ([install](https://vlang.io)): `v --version`
   should print `V 0.5.x` (verified end-to-end on `V 0.5.2`).
-- VLS: optional. If `vls` is on `PATH`, that install is used as-is
-  (verified end-to-end on `VLS 0.0.3` from `v ls --install`). Otherwise
-  the extension downloads its pinned build once (approve Zed's one-time
-  download prompt) and caches it per version:
+- VLS: comes with the extension. On first use it downloads its pinned
+  build once (approve Zed's one-time download prompt) and caches it per
+  version. A `vls` on `PATH` is still respected as fallback — useful
+  offline or with a custom toolchain (verified end-to-end on `VLS 0.0.3`
+  from `v ls --install`). To install VLS yourself:
 
   ```sh
   v ls --install
@@ -35,8 +36,8 @@ completion/diagnostics/code actions, and the same snippet set.
   for building VLS from source. The newer GitHub VLS tag `0.3` is not a
   drop-in upgrade: it builds only with era-pinned V, needs `VLS_V_COMMAND`
   pointing at that compiler, and has no `--version` flag — stay on `0.0.3`
-  with current V. The extension itself is version-agnostic (PATH `vls`
-  first, pinned download as fallback) and speaks LSP stdio.
+  with current V. The extension itself is version-agnostic (pinned
+  managed build first, PATH `vls` as fallback) and speaks LSP stdio.
 
 ## Install
 

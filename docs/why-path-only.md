@@ -1,9 +1,9 @@
 ---
 layout: default
-title: Why PATH-only
+title: Why managed-first
 ---
 
-# Why PATH-first (and what managed mode took)
+# Why managed-first (PATH as fallback)
 
 The extension prefers your tools over downloading: `src/lib.rs` looks up
 `vls` with `worktree.which("vls")` first, and only then falls back to a
@@ -66,9 +66,11 @@ from a pinned tag. The extension is now a hybrid:
 Remaining costs, accepted: whoever cuts the next `vls-N` tag owns the
 three-platform build; offline machines must bring their own `vls`.
 
-## Verdict (updated)
+## Verdict (updated: managed-first)
 
-PATH-first hybrid: PATH when present, pinned managed build otherwise.
-Stay that way; revisit only if upstream VLS publishes its own
-standalone binaries (then the fork can retire).
+The extension uses the pinned managed build whenever obtainable, and a
+`PATH` install only as fallback (offline, unsupported platform, declined
+download). Newer managed builds arrive via deliberate, re-verified pin
+bumps — never floating. Stay that way; revisit only if upstream VLS
+publishes its own standalone binaries (then the fork can retire).
 Publishing to the Zed extension registry is out of scope by decision.
