@@ -8,6 +8,16 @@ title: Troubleshooting
 All errors below were observed verbatim during verified installs
 (`zed: open log`). Each names its own fix.
 
+## The palette or dialog does not respond
+
+Three environment gotchas, all measured: a fresh folder first triggers
+Zed's Unrecognized Project / Restricted Mode modal — accept Trust before
+opening the palette. The folder dialog's Select Folder button must be
+clicked — Enter only navigates. And the palette shortcut follows your
+`base_keymap` (JetBrains maps it to Ctrl+Shift+A, not Ctrl+Shift+P);
+typing with a non-Latin keyboard layout lands in the editor instead of
+the palette, so switch to English first.
+
 ## `failed to fetch revision <sha>`
 
 ```text
