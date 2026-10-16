@@ -2,11 +2,12 @@ use zed_extension_api as zed;
 
 struct VlangExtension;
 
-// Pinned VLS build, used only when the user has no `vls` on PATH:
-// upstream master plus the tiered-diagnostics showcase and CI timeouts
-// (vlang/vls PRs #548 and #549), built per platform as metif12/vls
-// release assets. Bumped deliberately: each tag change is re-verified
-// (hover + diagnostics) before landing.
+// Pinned VLS build — always preferred (this tag or above via deliberate,
+// re-verified bumps): upstream master plus the tiered-diagnostics showcase
+// and CI timeouts (vlang/vls PRs #548 and #549), built per platform as
+// metif12/vls release assets. A `PATH` install is only a fallback for when
+// the managed build is unreachable (offline, unsupported platform,
+// declined download).
 const VLS_REPO: &str = "metif12/vls";
 const VLS_VERSION_TAG: &str = "vls-2";
 
@@ -67,28 +68,30 @@ impl zed::Extension for VlangExtension {
         language_server_id: &zed::LanguageServerId,
         worktree: &zed::Worktree,
     ) -> zed::Result<zed::Command> {
-        // An explicit user install always wins: it stays paired with the
-        // user's own V toolchain (which VLS shells out to).
-        if let Some(command) = worktree.which("vls") {
-            return Ok(zed::Command {
+        // Our pinned build first: identical, verified server for every
+        // user. Approve Zed's one-time download prompt when it appears.
+        // A PATH install is only the fallback for when managed is
+        // unreachable (its toolchain pairing still matters, since VLS
+        // shells out to `v`); the managed failure is kept in the message.
+        match managed_vls(language_server_id) {
+            Ok(command) => Ok(zed::Command {
                 command,
                 args: vec![],
                 env: Default::default(),
-            });
+            }),
+            Err(managed_err) => {
+                let command = worktree.which("vls").ok_or(format!(
+                    "managed VLS unavailable ({managed_err}), and no `vls` on \
+                     PATH. Install VLS with the V toolchain (`v ls \
+                     --install`) and make sure `vls` is on PATH."
+                ))?;
+                Ok(zed::Command {
+                    command,
+                    args: vec![],
+                    env: Default::default(),
+                })
+            }
         }
-        // Zero-setup fallback: the pinned fork build, cached per version.
-        // Approve Zed's one-time download prompt when it appears.
-        let command = managed_vls(language_server_id).map_err(|e| {
-            format!(
-                "vls not found on PATH ({e}). Install it with the V toolchain \
-                 (`v ls --install`) and make sure `vls` is on PATH."
-            )
-        })?;
-        Ok(zed::Command {
-            command,
-            args: vec![],
-            env: Default::default(),
-        })
     }
 }
 
