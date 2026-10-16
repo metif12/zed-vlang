@@ -8,7 +8,7 @@ struct VlangExtension;
 // release assets. Bumped deliberately: each tag change is re-verified
 // (hover + diagnostics) before landing.
 const VLS_REPO: &str = "metif12/vls";
-const VLS_VERSION_TAG: &str = "vls-1";
+const VLS_VERSION_TAG: &str = "vls-2";
 
 struct VlsAsset {
     file: &'static str,
