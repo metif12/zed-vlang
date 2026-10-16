@@ -78,7 +78,10 @@ If the install fails, the log names the exact cause; see
   name).
 - **Tasks**: extensions cannot ship tasks in Zed, so add these to your
   project's `.zed/tasks.json` (run with `task: spawn`). This mirrors the
-  `V: Build` / `V: Run` / `V: Test` tasks of `vscode-vlang`:
+  `V: Build` / `V: Run` / `V: Test` tasks of `vscode-vlang`.
+  `fn main` and `fn test_*` also get inline Run buttons
+  (`languages/v/runnables.scm`); they fire the tagged tasks, so keep the
+  `tags` on those two entries.
 
 ```json
 [
@@ -86,7 +89,8 @@ If the install fails, the log names the exact cause; see
     "label": "V: run current file",
     "command": "v",
     "args": ["run", "$ZED_FILE"],
-    "cwd": "$ZED_WORKTREE_ROOT"
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "tags": ["v-main"]
   },
   {
     "label": "V: build workspace",
@@ -99,6 +103,13 @@ If the install fails, the log names the exact cause; see
     "command": "v",
     "args": ["test", "."],
     "cwd": "$ZED_WORKTREE_ROOT"
+  },
+  {
+    "label": "V: test current file",
+    "command": "v",
+    "args": ["test", "$ZED_FILE"],
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "tags": ["v-test"]
   },
   {
     "label": "V: format current file",

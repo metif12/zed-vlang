@@ -76,6 +76,14 @@ def main() -> int:
             node_types = set()
         for scm_path in sorted((ROOT / "languages" / "v").glob("*.scm")):
             text = scm_path.read_text(encoding="utf-8")
+            # Drop full-line `;` comments first (prose like "(task tags …)"
+            # is not a node), then #predicates ((#eq? ...), (#match? ...),
+            # (#set! tag ...)): they reference captures, never nodes.
+            text = "\n".join(
+                line for line in text.splitlines()
+                if not line.lstrip().startswith(";")
+            )
+            text = re.sub(r"\(#[^()\n]*\)", "", text)
             used = sorted(set(re.findall(r"\(([a-z_][a-z0-9_]*)(?=[\s)])", text)))
             bad = [u for u in used if u not in node_types]
             if bad and node_types:
