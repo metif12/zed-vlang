@@ -101,6 +101,12 @@ If the install fails, the log names the exact cause; see
   same two steps (`v install --git …`, `v -g ~/.vmodules/c2v/`) ship as a
   task instead.
 
+Two tasks depend on your V being able to compile and format: `V: format
+current file` runs `v fmt -w`, and Zed's format-on-save reaches VLS,
+which runs `v fmt -inprocess -w` itself. If either is a no-op, run `v fmt
+-w somefile.v` in a terminal first — `docs/troubleshooting.md` has the
+measured failure modes.
+
 ```json
 [
   {

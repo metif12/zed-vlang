@@ -5,6 +5,15 @@ All notable changes, per release tag. Untagged work sits under
 
 ## Unreleased
 
+- Corrected the format-on-save claim with a measurement: VLS runs
+  `v fmt -inprocess -w` itself, and when that fails it answers with no
+  edits and logs nothing outside debug builds. The install checklist now
+  sends you to `v fmt -w` in a terminal first, and the README flags the
+  two tasks that need a compiling, formatting V.
+- New troubleshooting entry for `GC_MALLOC_UNCOLLECTABLE` /
+  `GC_FREE` / `v_set_unhandled_exception_filter` implicit-declaration
+  errors: V's `vlib/builtin/c` is missing from the install, so `v fmt`,
+  `v build` and `v run` fail while VLS keeps working.
 - New task `V: install c2v (slow, one-time)`: fails fast without
   `clang`, clones the module when it is absent, then builds it — the
   portable half of upstream #617, whose `Install c2v` error action has

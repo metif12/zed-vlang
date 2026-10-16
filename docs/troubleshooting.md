@@ -168,6 +168,39 @@ Log noise: VLS answers workspace pull diagnostics with `[]`, which Zed
 rejects. Push diagnostics (squiggles, panel, hover popups) are unaffected
 — safe to ignore.
 
+## Format Document / format on save changes nothing
+
+Zed asks VLS (`documentFormattingProvider` is advertised — measured on
+the pinned build), and VLS runs the real formatter itself:
+`v fmt -inprocess -w` on a temporary copy of the buffer. So a silent
+no-op means **`v fmt` failed**, not that Zed skipped the request. The
+server logs that failure only in debug builds, so nothing reaches the
+Zed log; the LSP response is simply `[]`.
+
+Check it directly first:
+
+```console
+$ v fmt -w somefile.v   # exit 0 and the file changes = V can format
+```
+
+## Every V build fails with a GC error
+
+```text
+warning: implicit tcc could not be used for this build (tcc: error:
+unresolved reference to 'GC_MALLOC_UNCOLLECTABLE'), regenerating it
+with gcc.exe
+C compilation error (from gcc.exe):
+src.c:1374:19: error: implicit declaration of function
+'GC_MALLOC_UNCOLLECTABLE' [-Wimplicit-function-declaration]
+```
+
+This is V, not Zed: the generated `src.c` is missing the declarations
+that live in V's C runtime directory. On a checkout where
+`vlib/builtin/c` is absent, `v fmt`, `v build` and `v run` all fail this
+way while VLS keeps working (its diagnostics come from its own parser,
+not from a C build). Reinstall or upgrade V so `vlib/builtin/c` is
+present — on a Windows install that is `C:\Users\<you>\v\vlib\builtin\c`.
+
 ## Managed VLS download fails or never starts
 
 The extension uses its pinned build first (`metif12/vls` tag `vls-2`),

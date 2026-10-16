@@ -107,8 +107,11 @@ Open any `.v` file and confirm:
    it expands `fn name() { … }` with `$1`/`$0` tab stops (Tab moves on).
 5. **Outline/indent**: the outline panel lists functions; Enter after
    `fn main() {` indents the new line.
-6. **Format on save** (optional Zed setting): formats through VLS,
-   which advertises document formatting.
+6. **Format on save** (optional Zed setting): Zed asks VLS, and VLS runs
+   `v fmt -inprocess -w` on a copy of the buffer, so this only reformats
+   when your own `v fmt` works. Check that first in a terminal — if it
+   fails, VLS answers the request with no edits and says nothing (see
+   `troubleshooting.md`).
 
 For tasks, copy the array from the README into your project's
 `.zed/tasks.json` and run it with `task: spawn` — it must be a JSON
