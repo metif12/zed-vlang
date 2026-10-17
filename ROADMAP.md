@@ -99,13 +99,17 @@ Run buttons, and a docs site. `lv37/zed-v` ships none of those.
    but absent from the published 0.7.0 Rust trait, so the extension cannot
    declare one yet. Until 0.8.0 ships these two keys have no settings UI and
    are written by hand. Watch for 0.8.0.
-6. **`debugger.scm` + DAP** — **in Zed, blocked on V.** Zed's extension API
-   has supported DAP since 0.6.0 (`get-dap-binary`, `dap-locator-create-scenario`,
-   `run-dap-locator`), and `config.toml` accepts a `debuggers` array. So the
-   old claim "debugger launch is not portable" is **out of date**. The real
-   blocker is upstream: **measured** — V 0.5.2's `v help` has no debug
-   subcommand and no DAP flag, so there is no adapter to launch. Revisit when
-   V ships one.
+6. **`debugger.scm` + DAP** — **in Zed, blocked on V, now evidenced on both
+   sides.** Zed's extension API has supported DAP since 0.6.0
+   (`get-dap-binary`, `dap-config-to-scenario`, `run-dap-locator`), and
+   `config.toml` accepts a `debuggers` array; the official Java extension
+   declares `[debug_adapters.<name>]` in its manifest. So the old claim
+   "debugger launch is not portable" is **out of date**. The blocker is
+   upstream, and both halves were checked: **measured** — V 0.5.2's `v help`
+   has no debug subcommand (only the `v -g run` note), and the pinned VLS
+   source contains **zero** references to a debug adapter. There is no adapter
+   for Zed to launch, so `debugger.scm` would have nothing to attach to.
+   Revisit when either ships one.
 7. **Slash commands** — **in Zed.** `run_slash_command` /
    `complete_slash_command_argument` (since 0.7.0) mean a `/v-…` command is
    now possible, which the old roadmap called non-portable. Low value until a
