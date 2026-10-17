@@ -2,6 +2,24 @@ name = "V"
 grammar = "v"
 path_suffixes = ["v", "vsh", "vh", "vv", "v.mod"]
 line_comments = ["// "]
+# V 0.5.2 accepts `/* */` block comments (verified with `v -check`; the
+# grammar exposes both forms as one `comment` node). ToggleBlockComment works.
+block_comment = { start = "/*", prefix = "", end = "*/", tab_size = 1 }
+# V script shebangs. Verified against real forms; deliberately rejects
+# `#!/usr/bin/env python3` and `#!/bin/sh` so those stay shell/python.
+first_line_pattern = '^#!.*/(?:v|env(?: .*)? v)(?: |$)'
+# `not_in` consumes the scopes defined by overrides.scm (@comment, @string):
+# without this table those scopes configure nothing and overrides.scm is inert.
+# V has no backtick strings and no `"""` long strings (both rejected by
+# `v -check` on 0.5.2), so unlike Go/Python there is no backtick pair here.
+autoclose_before = ";:.,=}])>"
+brackets = [
+    { start = "{", end = "}", close = true, newline = true },
+    { start = "[", end = "]", close = true, newline = true },
+    { start = "(", end = ")", close = true, newline = true },
+    { start = "\"", end = "\"", close = true, newline = false, not_in = ["comment", "string"] },
+    { start = "'", end = "'", close = true, newline = false, not_in = ["comment", "string"] },
+]
 tab_size = 4
 hard_tabs = false
 code_fence_block_name = "v"

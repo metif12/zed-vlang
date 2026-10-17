@@ -40,6 +40,62 @@ def main() -> int:
     if cfg.get("grammar") != "v":
         fail("languages/v/config.toml: grammar must be 'v'")
 
+    # Every regex-valued key must compile, and `first_line_pattern` must both
+    # match a real V shebang and reject a non-V one. A pattern that matches
+    # everything is worse than none: it would claim every extensionless script.
+    for key in ("first_line_pattern", "increase_indent_pattern",
+                "decrease_indent_pattern", "collapsed_placeholder"):
+        if key in cfg and key != "collapsed_placeholder":
+            try:
+                re.compile(cfg[key])
+            except re.error as e:
+                fail(f"languages/v/config.toml: {key} is not a valid regex: {e}")
+    shebang = cfg.get("first_line_pattern")
+    if shebang:
+        must_match = ["#!/usr/bin/env v", "#!/usr/bin/v", "#!/usr/bin/env v run",
+                      "#!/usr/bin/env -S v run"]
+        must_not = ["#!/usr/bin/env python3", "#!/bin/sh"]
+        for s in must_match:
+            if not re.match(shebang, s):
+                fail(f"languages/v/config.toml: first_line_pattern misses V shebang {s!r}")
+        for s in must_not:
+            if re.match(shebang, s):
+                fail(f"languages/v/config.toml: first_line_pattern wrongly matches {s!r}")
+        print(f"languages/v/config.toml: first_line_pattern ok ({len(must_match)} V shebangs, {len(must_not)} rejections)")
+
+    # Zed loads exactly ten Tree-sitter query assets per language. Report
+    # coverage so a newly-shippable asset cannot be forgotten silently.
+    supported_queries = ["highlights", "brackets", "outline", "indents",
+                         "injections", "overrides", "redactions", "runnables",
+                         "debugger", "textobjects"]
+    lang_dir = ROOT / "languages" / "v"
+    present = [q for q in supported_queries if (lang_dir / f"{q}.scm").is_file()]
+    missing = [q for q in supported_queries if q not in present]
+    print(f"languages/v: {len(present)}/{len(supported_queries)} Zed query assets present")
+    if missing:
+        print(f"  not shipped: {', '.join(missing)}")
+
+    # overrides.scm only configures anything when something consumes its
+    # scopes: `brackets[].not_in` or a `[overrides.<scope>]` table. Without a
+    # consumer the file is inert (it shipped that way in 0.6.0).
+    overrides_scm = lang_dir / "overrides.scm"
+    if overrides_scm.is_file():
+        scopes = set()
+        for line in overrides_scm.read_text(encoding="utf-8").splitlines():
+            line = line.split(";")[0].strip()
+            m = re.search(r"@([a-z_]+)(?:\.inclusive)?\s*$", line)
+            if m:
+                scopes.add(m.group(1))
+        consumed = set(cfg.get("overrides", {}))
+        for br in cfg.get("brackets", []) or []:
+            consumed.update(br.get("not_in", []) or [])
+        for br in cfg.get("disabled_scopes_by_bracket_ix", []) or []:
+            consumed.update(br)
+        if scopes and not (scopes & consumed):
+            fail(f"languages/v/overrides.scm defines scope(s) {sorted(scopes)} that "
+                 f"nothing consumes: add them to a brackets[].not_in list or an "
+                 f"[overrides.<scope>] table, or the file is inert")
+
     total = 0
     for path in sorted((ROOT / "snippets").glob("*.json")):
         try:

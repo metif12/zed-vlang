@@ -70,7 +70,10 @@ If the install fails, the log names the exact cause; see
   maintained [`tree-sitter-v`](https://github.com/undivisible/tree-sitter-v)
   grammar: syntax highlighting, bracket matching, outline symbols,
   auto-indent, and inline Run buttons on `fn main` and `fn test_*`
-  (via `runnables.scm`, wired to the tagged tasks below).
+  (via `runnables.scm`, wired to the tagged tasks below). Extensionless
+  scripts with a V shebang (`#!/usr/bin/env v`, `#!/usr/bin/v`,
+  `#!/usr/bin/env -S v run`) are recognised too. `/* */` block comments work
+  alongside `//`. Literals are redacted while you screen share or record.
 - **Language server** from VLS (started automatically for V files).
   Every capability below is advertised by the live VLS 0.0.3 server
   itself (read off its LSP `initialize` response), and the starred ones
@@ -130,6 +133,15 @@ which is the contract Zed expects. Measured on 1.24.2: `Ctrl-Alt-L`
 rewrites a mis-formatted file byte-identically to `v fmt -`, and saving
 formats too. Note the legacy per-language `"V": { … }` block is silently
 ignored on 1.24.2 — use `"languages"`.
+
+To try that formatter by hand, avoid piping into it from PowerShell: the
+pipeline hands `v` a byte-order mark and V aborts with `invalid character`.
+Redirect the bytes instead:
+
+```sh
+cmd /c "v fmt - < main.v"      # Windows
+v fmt - < main.v               # any POSIX shell
+```
 
 ```json
 [
@@ -222,6 +234,13 @@ ignored on 1.24.2 — use `"languages"`.
 
 The file must contain a JSON array (a bare object is rejected by Zed:
 `Failed to parse tasks file content as a JSON array`).
+
+Extensions really cannot ship tasks. The official Zig extension contains a
+`languages/zig/tasks.json`, which suggests otherwise, but that filename is
+absent from Zed's extension language-asset loader
+(`crates/language_core/src/queries.rs` in `zed-industries/zed`) — it only
+appears in Zed's own settings and task UI code. So the copy-paste above is
+the only way to get them.
 
 File tasks save the current buffer first (`"save": "current"`), workspace
 tasks save everything (`"save": "all"`) — mirroring upstream, which saves

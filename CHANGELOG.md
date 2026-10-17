@@ -5,6 +5,40 @@ All notable changes, per release tag. Untagged work sits under
 
 ## Unreleased
 
+- V script shebangs now select the V language: `first_line_pattern` matches
+  `#!/usr/bin/env v`, `#!/usr/bin/v`, `#!/usr/bin/env v run` and
+  `#!/usr/bin/env -S v run`, while still rejecting `#!/usr/bin/env python3`
+  and `#!/bin/sh`. The validator now asserts both directions.
+- Added a `brackets` autoclose table. This also fixes a real 0.6.0 defect:
+  `overrides.scm` shipped defining `@comment`/`@string` scopes that nothing
+  consumed, so it configured nothing. Those scopes are now consumed by
+  `not_in`, and the validator fails if they ever go unconsumed again.
+  V-specific forms only: `/* */` block comments are supported (measured with
+  `v -check`), while backtick and `"""` string pairs are deliberately absent
+  because V 0.5.2 rejects both.
+- Added `block_comment` so `editor::ToggleBlockComment` works on `/* */`.
+- `(match_expression) @indent` added to `indents.scm`, matching `v fmt`'s
+  two-level match-arm indentation (arms at +2 relative to the block body).
+- New `redactions.scm`: string, rune and numeric literals render redacted
+  while screen sharing or recording. It was one of the ten query assets Zed
+  loads from a language extension, and the only cheap one still missing.
+- `scripts/check-extension.py` reports how many of Zed's ten loadable query
+  assets the extension ships, so the remaining two (`injections`, `debugger`)
+  stay visible rather than forgotten.
+- ROADMAP rewritten against a measured baseline: Zed's own query-asset loader
+  and `config.toml` schema, `zed-extensions/zig`, and `lv37/zed-v` — which is
+  **already published in the Zed registry as `extensions/v`**. Two of the
+  old "not portable" claims were wrong and are corrected: debugging and
+  slash commands are both in the extension API since 0.7.0, with debugging
+  blocked only by V shipping no debug adapter.
+- Recorded three assumptions that measurement refuted, so they are not
+  re-derived: extensions genuinely cannot ship tasks (the Zig extension's
+  `tasks.json` is dead weight, absent from Zed's asset loader); `$` is not a
+  V word character (V rejects `bar$`); V has no backtick or `"""` strings.
+- Also documented that `v fmt -` cannot be exercised through a PowerShell
+  pipeline (it injects a BOM; use `cmd /c "v fmt - < file"`). Zed spawns the
+  formatter directly and is unaffected.
+
 - Formatting, measured end to end on Zed 1.24.2: VLS advertises
   `documentFormattingProvider` but answers with no edits for every input
   (six cases driven directly over LSP, with a working `v` on `PATH`; a
