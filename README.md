@@ -108,11 +108,10 @@ If the install fails, the log names the exact cause; see
   (`languages/v/runnables.scm`); they fire the tagged tasks, so keep the
   `tags` on those two entries. Replace `"v"` with your compiler's absolute
   path if it is not on `PATH` (the equivalent of upstream's
-  `v.executablePath` setting). `V: install c2v (slow, one-time)` is the
-  portable half of upstream's c2v work: upstream can hang an
-  `Install c2v` action off the failure, Zed has no command API, so the
-  same two steps (`v install --git …`, `v -g ~/.vmodules/c2v/`) ship as a
-  task instead.
+  `v.executablePath` setting). The `c2v` tasks are the portable half of
+  upstream's c2v work: upstream can hang an `Install c2v` action off the
+  failure, Zed has no command API, so the same two steps ship as plain
+  tasks instead.
 
 Two tasks depend on your V being able to compile and format: `V: format
 current file` runs `v fmt -w`, and the external formatter below runs
@@ -218,15 +217,21 @@ v fmt - < main.v               # any POSIX shell
     "save": "current"
   },
   {
-    "label": "V: install c2v (slow, one-time)",
-    "command": "if (-not (Get-Command clang -ErrorAction SilentlyContinue)) { Write-Error 'c2v needs a clang binary on PATH - install clang, then re-run this task'; exit 1 }; if (Test-Path \"$env:USERPROFILE\\.vmodules\\c2v\") { Write-Output 'c2v source already cloned - rebuilding' } else { v install --git https://github.com/vlang/c2v }; v -g ~/.vmodules/c2v/",
-    "args": [],
+    "label": "V: clone c2v (one-time)",
+    "command": "v",
+    "args": ["install", "--git", "https://github.com/vlang/c2v"],
+    "cwd": "$ZED_WORKTREE_ROOT"
+  },
+  {
+    "label": "V: build c2v (needs clang)",
+    "command": "v",
+    "args": ["-g", "~/.vmodules/c2v/"],
     "cwd": "$ZED_WORKTREE_ROOT"
   },
   {
     "label": "V: translate C to V (needs c2v)",
-    "command": "if (Get-Command c2v -ErrorAction SilentlyContinue) { c2v \"$ZED_FILE\" } else { Write-Error \"c2v is not installed. Run: v install --git https://github.com/vlang/c2v ; then: v -g ~/.vmodules/c2v/ ; c2v also needs clang on PATH.\"; exit 1 }",
-    "args": [],
+    "command": "c2v",
+    "args": ["$ZED_FILE"],
     "cwd": "$ZED_WORKTREE_ROOT",
     "save": "current"
   },
@@ -241,6 +246,19 @@ v fmt - < main.v               # any POSIX shell
 
 The file must contain a JSON array (a bare object is rejected by Zed:
 `Failed to parse tasks file content as a JSON array`).
+
+Every task above is a plain command plus arguments — no shell scripting. Zed
+runs a task in your login shell (`terminal.shell`), which is PowerShell on
+Windows and bash/zsh elsewhere, so a `command` containing `if`/`&&`/`;`
+portable-ly cannot be written for both. Upstream `vscode-vlang` gets away
+with richer tasks because it implements them in TypeScript with its own
+platform-aware path handling, which an extension has no equivalent of. The
+`c2v` prerequisites (a `clang` binary, and a prior clone + build) are
+therefore prose in `docs/tests.md` rather than guards in the command string.
+
+`V: build c2v` uses `~/.vmodules/c2v/`. Bash and zsh expand `~`; PowerShell
+does not, so on Windows run `v -g $env:USERPROFILE\.vmodules\c2v\` by hand, or
+point the task at your own path.
 
 Extensions really cannot ship tasks. The official Zig extension contains a
 `languages/zig/tasks.json`, which suggests otherwise, but that filename is

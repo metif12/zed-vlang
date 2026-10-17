@@ -5,6 +5,21 @@ All notable changes, per release tag. Untagged work sits under
 
 ## Unreleased
 
+- **Task array is now shell-free and portable.** The two `c2v` entries used
+  to embed Windows PowerShell (`Get-Command`, `Test-Path`, `$env:USERPROFILE`)
+  while being presented as the general recipe. Zed runs a task in your login
+  shell — PowerShell on Windows, bash/zsh elsewhere — so a `command` string
+  cannot contain a precondition that works in both. Replaced with plain
+  commands: `V: clone c2v (one-time)` and `V: build c2v (needs clang)` as two
+  steps, plus a bare `c2v` for the translate task. Every task in the array is
+  now a command plus `args`, and the `clang`/`c2v` prerequisites moved to
+  prose. Upstream gets away with richer tasks because it implements them in
+  TypeScript with its own platform-aware path handling.
+- **`hard_tabs` is now `true`.** `v fmt` on V 0.5.2 emits 32 tab characters and
+  0 spaces, and `v help fmt` shows nine options, none of which change
+  indentation style — vfmt cannot be asked for spaces at all. Tab previously
+  inserted a space the formatter then rewrote. Projects that want spaces can
+  still set `"hard_tabs": false` for V in `settings.json`.
 - `language_servers.vls.settings` is now forwarded to VLS verbatim via
   `language_server_workspace_configuration`, so VLS's two settings actually
   take effect. Measured: driving the pinned server over LSP,

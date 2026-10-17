@@ -70,10 +70,15 @@ Run buttons, and a docs site. `lv37/zed-v` ships none of those.
    sets `hard_tabs = true`, and `gofmt` has the same property. Recommend
    flipping to `true`, but it changes an editor default users feel, so it
    should be a conscious choice with a CHANGELOG note, not a drive-by.
-2. **`injections.scm`** — the last cheap query asset. Needs a concrete V
-   embedding to be worth it; `veb`'s `.html` templates are the candidate
-   (V ships `$tmpl()` and `.html` files with V expressions). Node names must
-   be checked against the pinned grammar first.
+2. ~~**`injections.scm`**~~ — **measured: no target exists.** Language
+   injections embed one language inside another (Markdown fences, HTML in
+   templates). The pinned V grammar has no structure to aim at: no `veb`,
+   template or HTML node exists, and its one JavaScript-related token, `JS`,
+   is an orphan — no named node lists it as a child, so nothing can capture
+   it. V's `veb` `.html` templates are not parsed by this grammar at all.
+   V-in-Markdown is already handled the cheaper way, by
+   `code_fence_block_name = "v"` in `config.toml`. Shipping an
+   `injections.scm` here would be a file that can only ever capture nothing.
 3. ~~**`semantic_token_rules.json`**~~ — **measured: not needed.** Driving the
    pinned VLS over LSP, its semantic token legend is `keyword`, `comment`,
    `string`, `number`, `type`, `function`, `method`, `property`, `variable`,
@@ -110,10 +115,16 @@ Run buttons, and a docs site. `lv37/zed-v` ships none of those.
    source contains **zero** references to a debug adapter. There is no adapter
    for Zed to launch, so `debugger.scm` would have nothing to attach to.
    Revisit when either ships one.
-7. **Slash commands** — **in Zed.** `run_slash_command` /
-   `complete_slash_command_argument` (since 0.7.0) mean a `/v-…` command is
-   now possible, which the old roadmap called non-portable. Low value until a
-   V action is worth wrapping; revisit with the `v.generateTests` item below.
+7. ~~**Slash commands**~~ — **in Zed, but nothing worth wrapping.**
+   `run_slash_command` / `complete_slash_command_argument` (since 0.7.0) mean
+   a `/v-…` command is possible, which the old roadmap called non-portable.
+   Measured, though: every action worth exposing is either already covered by
+   a task (`v run`, `v test .`) or does not exist in V yet
+   (`v cover --write-tests`). A slash command can only return text, so it
+   cannot beat a task for anything that runs a build, and duplicating tasks
+   would be worse, not better. Revisit when V gains a command worth a
+   one-shot text answer — playground sharing is the likely candidate, since
+   it is a query rather than a build.
 
 ## Blocked (needs something else first)
 

@@ -44,37 +44,28 @@ runnable as a Zed task.
 
 The README task `V: translate C to V (needs c2v)` runs the file through
 the [c2v](https://github.com/vlang/c2v) binary, which writes the sibling
-`.v` file itself. Like upstream, the task checks for the binary first
-and fails with setup instructions when it is missing. Prerequisites,
-verbatim from upstream:
+`.v` file itself. Save the `.c` file before spawning the task (upstream
+saves it for you; Zed tasks run on disk state — ours declares
+`"save": "current"`).
 
-```text
-c2v is not installed. Run `v install --git https://github.com/vlang/c2v`
-to clone it, then `v -g ~/.vmodules/c2v/` to build it, and try again.
-c2v also needs a `clang` binary on your PATH.
-```
+## c2v setup
 
-Save the `.c` file before spawning the task (upstream saves it for you;
-Zed tasks run on disk state — ours declares `"save": "current"`).
+Two README tasks do the setup, in order:
 
-The README task `V: install c2v (slow, one-time)` does the two setup
-steps for you, so the usual path is: install `clang`, spawn that task,
-then translate. Upstream reaches the same place from the other side —
-its c2v failure carries an `Install c2v` action — which Zed cannot
-express, since the extension API has no commands.
+1. `V: clone c2v (one-time)` — runs
+   `v install --git https://github.com/vlang/c2v`.
+2. `V: build c2v (needs clang)` — runs `v -g ~/.vmodules/c2v/`.
 
-The README task speaks Windows PowerShell (what Zed tasks use there).
-The POSIX equivalent, same behavior:
+`clang` must be on `PATH` before step 2, and `c2v` must be on `PATH` before
+translating. Upstream instead hangs an `Install c2v` action off the failure
+message; Zed cannot express that, because the extension API has no commands.
 
-```sh
-command -v c2v >/dev/null || { echo "c2v is not installed. Run: v install --git https://github.com/vlang/c2v ; then: v -g ~/.vmodules/c2v/ ; c2v also needs clang on PATH."; exit 1; }
-c2v "$ZED_FILE"
-```
+These tasks carry **no shell guard**, deliberately. Zed runs a task in your
+login shell — PowerShell on Windows, bash/zsh elsewhere — so a single
+`command` string cannot contain a precondition that works in both. A failed
+`c2v` invocation saying `command not found` is the guard.
 
-Install task, POSIX equivalent of the README entry:
-
-```sh
-command -v clang >/dev/null || { echo "c2v needs a clang binary on PATH - install clang, then re-run this task" >&2; exit 1; }
-[ -d ~/.vmodules/c2v ] || v install --git https://github.com/vlang/c2v
-v -g ~/.vmodules/c2v/
-```
+`v -g ~/.vmodules/c2v/` relies on the shell expanding `~`, which bash and
+zsh do and PowerShell does not. On Windows, either run
+`v -g $env:USERPROFILE\.vmodules\c2v\` directly, or point the task's `args`
+at your own path.

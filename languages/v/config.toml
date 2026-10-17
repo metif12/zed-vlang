@@ -21,5 +21,10 @@ brackets = [
     { start = "'", end = "'", close = true, newline = false, not_in = ["comment", "string"] },
 ]
 tab_size = 4
-hard_tabs = false
+# vfmt only ever emits tabs: V 0.5.2's `v fmt` has nine options and none of
+# them change indentation style (measured from `v help fmt`), so there is no
+# supported way to make it write spaces. A hard-tab editor is the only setting
+# that agrees with the formatter. Zed's own Go config does the same for gofmt.
+# Projects that insist on spaces can set "hard_tabs": false for V in settings.
+hard_tabs = true
 code_fence_block_name = "v"

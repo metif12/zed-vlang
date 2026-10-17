@@ -188,6 +188,23 @@ def main() -> int:
             fail(f"README.md: duplicate task labels: {dupes}")
         print(f"README.md: {len(tasks)} tasks, labels unique")
 
+        # Zed runs a task in the user's login shell, which is PowerShell on
+        # Windows and bash/zsh elsewhere. A `command` holding shell syntax
+        # therefore cannot be portable, and the README presents this array as
+        # the copy-paste deliverable. Keep every command a bare executable and
+        # push preconditions into args/docs.
+        shellish = re.compile(r"[;&|]|\b(if|then|else|fi|for|do|done)\b"
+                              r"|\$env:|Get-Command|Test-Path|Write-(Error|Output)")
+        offenders = [(t.get("label"), t.get("command")) for t in tasks
+                     if isinstance(t, dict) and isinstance(t.get("command"), str)
+                     and shellish.search(t["command"])]
+        for label, command in offenders:
+            fail(f"README.md: task {label!r} puts shell syntax in `command` "
+                 f"({command!r}); use a bare executable plus args so the task "
+                 f"works in PowerShell and POSIX shells alike")
+        if not offenders:
+            print(f"README.md: all {len(tasks)} task commands are shell-free")
+
     link = re.compile(r"\]\((\./[^)#\s]+)(?:#[^)\s]*)?\)")
     for md_path in sorted((ROOT / "docs").glob("*.md")):
         for target in link.findall(md_path.read_text(encoding="utf-8")):
