@@ -5,6 +5,16 @@ All notable changes, per release tag. Untagged work sits under
 
 ## Unreleased
 
+- Completion entries are now tinted by kind, so VLS results separate into
+  types, functions, properties, constants and keywords at a glance. Uses
+  `label_for_completion`, available in every published extension API (Zed wraps
+  it in `labels_for_completions`), so this is not gated on the unpublished
+  0.8.0. Highlight names are limited to captures Zed's themes define. A
+  signature from VLS is appended dimmed only when it adds information —
+  VLS often restates the label inside `detail`, and that noise is now
+  suppressed. Completion filtering still matches the identifier alone.
+- CI gained a `cargo test` step. The workflow previously had no test job, so
+  the four new unit tests covering completion labels would not have run.
 - V script shebangs now select the V language: `first_line_pattern` matches
   `#!/usr/bin/env v`, `#!/usr/bin/v`, `#!/usr/bin/env v run` and
   `#!/usr/bin/env -S v run`, while still rejecting `#!/usr/bin/env python3`

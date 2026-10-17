@@ -32,6 +32,9 @@ jobs:
       - name: cargo check (wasm)
         run: cargo check --target wasm32-wasip1
 
+      - name: cargo test
+        run: cargo test
+
       - name: cargo fmt --check
         run: cargo fmt --all -- --check
 

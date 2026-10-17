@@ -78,10 +78,11 @@ Run buttons, and a docs site. `lv37/zed-v` ships none of those.
    advertises VLS semantic tokens but ships no rules for VLS's custom token
    types. Capture VLS's real token types over LSP, then map them to theme
    styles. Do not guess the token names.
-4. **Completion labels via `labels_for_completions`** — **in Zed** (the API
-   has been available since 0.7.0, not 0.8.0). `lv37/zed-v` implements
-   `label_for_completion` to tint labels by kind. Porting that is a small,
-   self-contained win. **needs a GUI check** for the visual result.
+4. ~~**Completion labels via `labels_for_completions`**~~ — **shipped.**
+   `label_for_completion` tints entries by kind and appends VLS's signature
+   only when it is not already in the label. Available since 0.7.0, not
+   0.8.0. Covered by four unit tests. **Still needs a GUI check** for the
+   visual result; the unit tests prove the mapping, not the rendering.
 5. **VLS settings schema** — **in Zed.** 0.7.0 exposes
    `language_server_initialization_options` plus its JSON Schema, and
    `language_server_workspace_configuration` plus its schema. That is how an
