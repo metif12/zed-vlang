@@ -134,6 +134,10 @@ Run buttons, and a docs site. `lv37/zed-v` ships none of those.
   the functions a coverage run never entered, which needs their coverage
   state plumbed into the action — there is no equivalent input here. A
   slash command would not fix this either; the V command still does not exist.
+  Note there is also nothing to plumb *from*: **measured** — the pinned VLS
+  has no coverage code at all, so its coverage state cannot be queried even
+  if a V shipped the flag. Upstream's coverage UI is its own extension
+  running `v cover`, not a language-server capability.
 - **A settings UI for `vls.inlayHints` / `vls.diagnostics`** — needs
   `zed_extension_api` 0.8.0, which is in Zed's tree but `publish = false`.
   The push half already ships; only the schema half is missing.

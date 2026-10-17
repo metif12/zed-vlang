@@ -77,8 +77,14 @@ Set them under `language_servers`, in your `settings.json`:
 Three corrections to what this page used to say, each measured against the
 running server rather than inferred:
 
-- **There is no `coverageDirectory` setting.** It was listed here from a guess.
-  The pinned VLS silently ignores it.
+- **There is no `coverageDirectory` setting, and no coverage support at
+  all.** It was listed here from a guess. The pinned VLS contains zero
+  references to coverage anywhere in its source, so the setting does not
+  exist, the feature does not exist, and there is nothing to point it at.
+  (Upstream `vscode-vlang` does expose `v.vls.coverage.enabled`, which makes
+  *its own* extension run and parse `v cover` — it is not a VLS capability
+  this extension can borrow.) Coverage therefore stays a `v cover` recipe in
+  `docs/tests.md`.
 - **The key is camelCase `inlayHints`.** The snake_case `inlay_hints` used for
   the field in V's own source is *not* accepted — that is what the `@[json:
   'inlayHints']` attribute on the field is for.

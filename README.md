@@ -94,8 +94,9 @@ If the install fails, the log names the exact cause; see
   input (measured directly over LSP), so formatting goes through Zed's
   external formatter — see the settings block below, verified working.
   Two settings are configurable, `vls.inlayHints` and `vls.diagnostics`;
-  `docs/install.md` has the shape. There is no `coverageDirectory` setting —
-  that name came from a guess and VLS silently ignores it.
+  `docs/install.md` has the shape. There is no coverage setting: the
+  `coverageDirectory` name that used to appear here came from a guess, and the
+  pinned VLS implements no coverage at all.
 - **Snippets**: 71 snippets in one set — the 59-snippet V set (functions,
   structs, matches, error handling, tests, numeric types) plus 12 `veb`
   web-framework snippets (`vapp`, `vget`, `vpst`, …), synced with upstream

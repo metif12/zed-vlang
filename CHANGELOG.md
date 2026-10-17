@@ -3,7 +3,9 @@
 All notable changes, per release tag. Untagged work sits under
 `Unreleased`.
 
-## Unreleased
+## v0.7.0
+
+Released 2026-10-17.
 
 - **Task array is now shell-free and portable.** The two `c2v` entries used
   to embed Windows PowerShell (`Get-Command`, `Test-Path`, `$env:USERPROFILE`)
@@ -27,9 +29,12 @@ All notable changes, per release tag. Untagged work sits under
   1 to 0 and `{"inlayHints":true}` brings it back. Zed pushes this payload on
   every settings change, which is how a push-configuration server like VLS is
   reached.
-- **Corrected: there is no `coverageDirectory` setting.** The install guide
-  listed it, and it came from a guess — VLS silently ignores it. The server
-  has exactly two settings, both booleans: `inlayHints` and `diagnostics`.
+- **Corrected: there is no `coverageDirectory` setting, and no coverage
+  support at all.** The install guide listed it "read off its source", but it
+  came from a guess. The pinned VLS contains zero references to coverage in
+  its entire source, so neither the setting nor the feature exists. Upstream's
+  `v.vls.coverage.enabled` is its own extension running `v cover`, not a VLS
+  capability. Coverage stays a `v cover` recipe in `docs/tests.md`.
 - **Corrected: the key is camelCase `inlayHints`.** The snake_case
   `inlay_hints` used for the field in V's own source is ignored, because the
   field carries an `@[json: 'inlayHints']` attribute.
