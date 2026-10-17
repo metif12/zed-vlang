@@ -115,6 +115,26 @@ fn completion_label(completion: zed::lsp::Completion) -> Option<zed::CodeLabel> 
     })
 }
 
+// VLS reads exactly two settings, both booleans, from the pushed
+// `workspace/didChangeConfiguration`. Verified by reading the pinned fork's
+// decoder (`resolve_workspace_settings` in its `handlers.v`) and by driving the
+// live server: `{"settings":{"vls":{"inlayHints":false}}}` drops the inlay-hint
+// count from 1 to 0.
+//
+// Two corrections to earlier documentation, both measured:
+//   * There is no `coverageDirectory` setting. It is silently ignored.
+//   * The JSON key is camelCase `inlayHints`, not the snake_case `inlay_hints`
+//     used in V's struct field. The snake_case spelling is ignored.
+//
+// The shape to put under `language_servers.vls.settings` is therefore:
+//
+//   { "vls": { "inlayHints": false, "diagnostics": true } }
+//
+// A JSON Schema for this is deliberately NOT shipped: Zed's
+// `language_server_workspace_configuration_schema` hook exists in the 0.8.0
+// WIT but not in the published 0.7.0 Rust trait, so the extension cannot
+// declare one until 0.8.0 ships. Until then users write these two keys by
+// hand, as docs/index.md explains.
 impl zed::Extension for VlangExtension {
     fn new() -> Self {
         Self
@@ -149,6 +169,25 @@ impl zed::Extension for VlangExtension {
                 })
             }
         }
+    }
+
+    // Pass the user's `language_servers.vls.settings` straight through, so
+    // whatever they write is exactly what VLS receives. Zed pushes this on
+    // every settings change, which is the only way to reach a server that
+    // reads configuration by push rather than by pull — VLS does.
+    //
+    // This hook alone is what makes the settings reachable; the JSON Schema
+    // that would give them a UI is not in the 0.7.0 trait (see the note above).
+    fn language_server_workspace_configuration(
+        &mut self,
+        language_server_id: &zed::LanguageServerId,
+        worktree: &zed::Worktree,
+    ) -> zed::Result<Option<zed::serde_json::Value>> {
+        Ok(
+            zed::settings::LspSettings::for_worktree(language_server_id.as_ref(), worktree)
+                .ok()
+                .and_then(|settings| settings.settings),
+        )
     }
 
     // Zed calls this hook (and, since 0.7.0, its batch form

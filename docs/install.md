@@ -58,17 +58,46 @@ and speaks LSP stdio.
 
 ## Configure VLS (limited)
 
-VLS understands three settings over LSP `workspace/didChangeConfiguration`
-(read off its source): `inlayHints` (bool, or `{enabled, variableTypes,
-parameterNames}`), `diagnostics` (bool, or `{enabled}`), and
-`coverageDirectory` (string) — all under a `vls` key.
+VLS understands exactly **two** settings, both booleans, read from a pushed
+LSP `workspace/didChangeConfiguration` under a `vls` key:
 
-In practice, Zed 1.24.2 was observed **not** to change VLS behavior for
-either shape: neither
-`{"lsp": {"vls": {"settings": {"vls": {"diagnostics": false}}}}}`
-nor the flat `{"diagnostics": false}` variant cleared squiggles across
-server restarts. Do not rely on these settings in Zed until re-measured
-on a newer version.
+- `inlayHints` — show inlay type hints for inferred types
+- `diagnostics` — run live compile-time diagnostics while editing
+
+Set them under `language_servers`, in your `settings.json`:
+
+```json
+{
+  "language_servers": {
+    "vls": { "settings": { "vls": { "inlayHints": false, "diagnostics": true } } }
+  }
+}
+```
+
+Three corrections to what this page used to say, each measured against the
+running server rather than inferred:
+
+- **There is no `coverageDirectory` setting.** It was listed here from a guess.
+  The pinned VLS silently ignores it.
+- **The key is camelCase `inlayHints`.** The snake_case `inlay_hints` used for
+  the field in V's own source is *not* accepted — that is what the `@[json:
+  'inlayHints']` attribute on the field is for.
+- **Both the nested and the flat shapes do work.** An earlier version of this
+  page reported that Zed 1.24.2 changed nothing. That measurement was taken
+  against stock VLS 0.0.3 from `v ls --install`, which has none of the
+  compatibility shapes; the pinned build does. Driving the live server,
+  `{"settings":{"vls":{"inlayHints":false}}}` takes the inlay-hint count from
+  1 to 0, and `{"settings":{"vls":{"inlayHints":true}}}` brings it back.
+
+The extension now forwards `language_servers.vls.settings` to VLS verbatim
+via `language_server_workspace_configuration`. It cannot yet supply a JSON
+Schema for them, so there is no settings UI for these two keys: Zed only added
+`language_server_workspace_configuration_schema` in the 0.8.0 API, which is
+not published. Until 0.8.0 ships, the JSON above is the way to set them.
+
+If you use a `PATH` VLS from stock V 0.5.x instead of the pinned build, check
+its source before trusting any of this — the settings surface above is the
+pinned fork's, and older VLS does not have these compat shapes.
 
 ## 2. Install the dev extension
 

@@ -5,6 +5,32 @@ All notable changes, per release tag. Untagged work sits under
 
 ## Unreleased
 
+- `language_servers.vls.settings` is now forwarded to VLS verbatim via
+  `language_server_workspace_configuration`, so VLS's two settings actually
+  take effect. Measured: driving the pinned server over LSP,
+  `{"settings":{"vls":{"inlayHints":false}}}` takes the inlay-hint count from
+  1 to 0 and `{"inlayHints":true}` brings it back. Zed pushes this payload on
+  every settings change, which is how a push-configuration server like VLS is
+  reached.
+- **Corrected: there is no `coverageDirectory` setting.** The install guide
+  listed it, and it came from a guess — VLS silently ignores it. The server
+  has exactly two settings, both booleans: `inlayHints` and `diagnostics`.
+- **Corrected: the key is camelCase `inlayHints`.** The snake_case
+  `inlay_hints` used for the field in V's own source is ignored, because the
+  field carries an `@[json: 'inlayHints']` attribute.
+- **Corrected: the nested and flat shapes both do work.** The install guide
+  said Zed 1.24.2 changed nothing. That was measured against stock VLS 0.0.3
+  from `v ls --install`, which has none of the compatibility shapes; the
+  pinned build accepts four shapes.
+- The VLS settings still have no settings UI: Zed's
+  `language_server_workspace_configuration_schema` hook is in the 0.8.0 WIT
+  but absent from the published 0.7.0 Rust trait. Tracked as blocked on 0.8.0.
+- README capability list completed. `documentHighlightProvider` (highlight all
+  occurrences) and `selectionRangeProvider` (expand selection) are advertised
+  by the server and were missing from the list, which claimed to be complete.
+- Semantic tokens verified as needing no `semantic_token_rules.json`: VLS's
+  legend is entirely standard LSP token types and no custom type appears in
+  the tokens it actually returns.
 - Completion entries are now tinted by kind, so VLS results separate into
   types, functions, properties, constants and keywords at a glance. Uses
   `label_for_completion`, available in every published extension API (Zed wraps
@@ -90,7 +116,9 @@ All notable changes, per release tag. Untagged work sits under
 - New `Configure VLS (limited)` install section: the three settings VLS
   understands (`inlayHints`, `diagnostics`, `coverageDirectory`), plus
   the measurement that Zed 1.24.2 changes no VLS behaviour for either
-  the nested or the flat payload shape.
+  the nested or the flat payload shape. (Both claims later proved wrong;
+  see Unreleased — `coverageDirectory` does not exist, and the payloads do
+  work against the pinned VLS.)
 - `CHANGELOG.md` added, curated per tag from git history.
 - Install checklist notes format-on-save (via VLS formatting).
 

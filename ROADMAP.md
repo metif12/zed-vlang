@@ -74,23 +74,31 @@ Run buttons, and a docs site. `lv37/zed-v` ships none of those.
    embedding to be worth it; `veb`'s `.html` templates are the candidate
    (V ships `$tmpl()` and `.html` files with V expressions). Node names must
    be checked against the pinned grammar first.
-3. **`semantic_token_rules.json`** — **needs a GUI check.** The extension
-   advertises VLS semantic tokens but ships no rules for VLS's custom token
-   types. Capture VLS's real token types over LSP, then map them to theme
-   styles. Do not guess the token names.
+3. ~~**`semantic_token_rules.json`**~~ — **measured: not needed.** Driving the
+   pinned VLS over LSP, its semantic token legend is `keyword`, `comment`,
+   `string`, `number`, `type`, `function`, `method`, `property`, `variable`,
+   `namespace` with modifiers `declaration` and `readonly` — all standard LSP
+   types — and no custom type appeared in the tokens actually returned for a
+   real V file. Zed's docs scope `semantic_token_rules.json` to non-standard
+   types, so shipping one would configure nothing. (Measured curiosity, not
+   acted on: VLS marks function parameters `variable` + `readonly`.)
 4. ~~**Completion labels via `labels_for_completions`**~~ — **shipped.**
    `label_for_completion` tints entries by kind and appends VLS's signature
    only when it is not already in the label. Available since 0.7.0, not
    0.8.0. Covered by four unit tests. **Still needs a GUI check** for the
    visual result; the unit tests prove the mapping, not the rendering.
-5. **VLS settings schema** — **in Zed.** 0.7.0 exposes
-   `language_server_initialization_options` plus its JSON Schema, and
-   `language_server_workspace_configuration` plus its schema. That is how an
-   extension contributes settings that Zed renders in its own settings UI.
-   `docs/index.md` currently tells users to hand-write three VLS keys;
-   a schema would replace that prose with real UI. **needs a GUI check**,
-   and VLS's accepted shape must be measured first — the 0.6.0 notes record
-   that Zed 1.24.2 ignored both nested and flat payloads.
+5. ~~**VLS settings schema**~~ — **half shipped; the docs were wrong.**
+   `language_server_workspace_configuration` now forwards
+   `language_servers.vls.settings` to VLS verbatim, which is what actually
+   reaches it: Zed pushes the adapter's configuration through
+   `workspace/didChangeConfiguration` on every settings change
+   (`refresh_workspace_configurations` in `crates/project/src/lsp_store.rs`),
+   so a push-reading server like VLS is reachable after all.
+   The JSON Schema half is **blocked on 0.8.0**: the
+   `language_server_workspace_configuration_schema` hook is in the 0.8.0 WIT
+   but absent from the published 0.7.0 Rust trait, so the extension cannot
+   declare one yet. Until 0.8.0 ships these two keys have no settings UI and
+   are written by hand. Watch for 0.8.0.
 6. **`debugger.scm` + DAP** — **in Zed, blocked on V.** Zed's extension API
    has supported DAP since 0.6.0 (`get-dap-binary`, `dap-locator-create-scenario`,
    `run-dap-locator`), and `config.toml` accepts a `debuggers` array. So the
@@ -105,12 +113,15 @@ Run buttons, and a docs site. `lv37/zed-v` ships none of those.
 
 ## Blocked (needs something else first)
 
-- `v.generateTests` as a one-click task: needs a V shipping
+- **`v.generateTests` as a one-click task**: needs a V shipping
   `v cover --write-tests` (absent from V 0.5.2's help). Recipe lives in
   `docs/tests.md` until then. Upstream #607 narrows the same action to
   the functions a coverage run never entered, which needs their coverage
   state plumbed into the action — there is no equivalent input here. A
   slash command would not fix this either; the V command still does not exist.
+- **A settings UI for `vls.inlayHints` / `vls.diagnostics`** — needs
+  `zed_extension_api` 0.8.0, which is in Zed's tree but `publish = false`.
+  The push half already ships; only the schema half is missing.
 - `v.translateWithC2v` execution: needs `c2v` built plus `clang` on
   `PATH`. The README now ships the install half as a task
   (`V: install c2v (slow, one-time)`, upstream #617 does the same two
