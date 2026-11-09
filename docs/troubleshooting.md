@@ -170,8 +170,7 @@ rejects. Push diagnostics (squiggles, panel, hover popups) are unaffected
 
 ## Format Document / format on save changes nothing
 
-VLS advertises `documentFormattingProvider` — measured on the pinned
-build — but the capability is inert: driven directly over JSON-RPC it
+VLS advertises `documentFormattingProvider`, but the capability is inert: driven directly over JSON-RPC it
 answers `[]` for every input, including grossly mis-indented files and
 files with syntax errors, and it does so with a working `v` on `PATH`
 (six cases, all empty). A proxy placed as `v.exe` on `PATH` recorded the
@@ -228,10 +227,10 @@ same machine, so compare with a release build before suspecting your C
 toolchain; a V checkout whose C generation is broken this way needs a
 different V (or a fix upstream).
 
-## Managed VLS download fails or never starts
+## VLS not found on PATH
 
-The extension uses its pinned build first (`metif12/vls` tag `vls-2`),
-so without a download there is no server. Two things can stop it: Zed
-prompts once for the `download_file` capability — declining leaves no
-server (approve it, or put a `vls` on `PATH`, which is still respected
-as fallback). And offline machines get the download error verbatim.
+The extension resolves `vls` from `PATH`. If Zed reports `no vls on
+PATH`, install VLS with the toolchain (`v ls --install`) and launch
+Zed from a shell where `vls` resolves, so the extension inherits that
+`PATH`. A custom build is respected as long as its `vls` is first on
+`PATH`.

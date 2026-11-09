@@ -96,8 +96,8 @@ upstream PR #608, with fixed descriptions and richer tab stops.
   (including the Fill struct literal), code lens (`vls.runFile`,
   `vls.runTests`), document formatting, folding ranges\* and semantic
   tokens. Go-to-definition and rename additionally need V's V1
-  compatibility compiler (`make` on `PATH`). The extension uses its
-  pinned managed build first, with a `PATH` `vls` as fallback.
+  compatibility compiler (`make` on `PATH`). VLS is resolved from `PATH`
+  (`v ls --install`); there is no managed download.
 - **Snippets**: 71 prefixes (`fn`, `for`, `stru`, `vapp`, …) with working tab stops.
 - **Tasks**: copy-paste `.zed/tasks.json` for run/build/test/fmt plus a
   one-time c2v install

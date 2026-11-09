@@ -18,26 +18,20 @@ completion/diagnostics/code actions, and the same snippet set.
 
 - The V toolchain on `PATH` ([install](https://vlang.io)): `v --version`
   should print `V 0.5.x` (verified end-to-end on `V 0.5.2`).
-- VLS: comes with the extension. On first use it downloads its pinned
-  build once (approve Zed's one-time download prompt) and caches it per
-  version. A `vls` on `PATH` is still respected as fallback — useful
-  offline or with a custom toolchain (verified end-to-end on `VLS 0.0.3`
-  from `v ls --install`). To install VLS yourself:
+- VLS: the official language server shipped with the V toolchain. Install it
+  once, then make sure `vls` is on `PATH`:
 
   ```sh
   v ls --install
   ```
 
-  (Older guides mention `v build-vls`; current V provides it as
-  `v ls --install`, which prints `VLS was updated to version: VLS 0.0.3`.)
-
-  `v ls` has shipped since V 0.3.1 (PR `vlang/v#15009`).
-  `v build-vls` never existed as a subcommand — older guides used the name
-  for building VLS from source. The newer GitHub VLS tag `0.3` is not a
-  drop-in upgrade: it builds only with era-pinned V, needs `VLS_V_COMMAND`
-  pointing at that compiler, and has no `--version` flag — stay on `0.0.3`
-  with current V. The extension itself is version-agnostic (pinned
-  managed build first, PATH `vls` as fallback) and speaks LSP stdio.
+  `v ls --install` prints `VLS was updated to version: VLS 0.0.3` and places
+  the binary under `~/.vls`. The extension resolves `vls` from `PATH` and
+  speaks LSP stdio, so it always tracks the VLS that matches your compiler.
+  A custom build (for example `v .` in a `vls` checkout) is respected as
+  long as its `vls` is first on `PATH`. There is no managed download any
+  more: the extension no longer ships its own pinned build. `v ls` has
+  shipped since V 0.3.1 (PR `vlang/v#15009`).
 
 ## Install
 
@@ -86,17 +80,20 @@ If the install fails, the log names the exact cause; see
   (including the Fill struct literal), code lens (`vls.runFile`,
   `vls.runTests`), document formatting†, folding ranges\* and semantic
   tokens. VLS emits only standard LSP semantic token types, so no custom
-  `semantic_token_rules.json` is needed. Go-to-definition and rename
+  `semantic_token_rules.json` is needed. Two MCP context servers are
+  offered to agents: VLS (`vls --mcp`) and the V compiler (`v mcp serve`).
+  Go-to-definition and rename
   additionally need V's V1
   compatibility compiler (`make` on `PATH`); without it the server logs
   so explicitly while diagnostics and hover keep working.
   † VLS advertises document formatting but answers with no edits for every
   input (measured directly over LSP), so formatting goes through Zed's
   external formatter — see the settings block below, verified working.
-  Two settings are configurable, `vls.inlayHints` and `vls.diagnostics`;
-  `docs/install.md` has the shape. There is no coverage setting: the
-  `coverageDirectory` name that used to appear here came from a guess, and the
-  pinned VLS implements no coverage at all.
+  Settings are configurable through `language_servers.vls.settings`:
+  `vls.inlayHints` (with `variableTypes` and `parameterNames`),
+  `vls.diagnostics`, `vls.defines` and `vls.coverageDirectory`;
+  `docs/install.md` has the shape. A project may also set these in a
+  `vls.json` next to its `v.mod` (project tier), which VLS reads itself.
 - **Snippets**: 71 snippets in one set — the 59-snippet V set (functions,
   structs, matches, error handling, tests, numeric types) plus 12 `veb`
   web-framework snippets (`vapp`, `vget`, `vpst`, …), synced with upstream

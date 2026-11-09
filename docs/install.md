@@ -17,11 +17,8 @@ Every step below was verified end-to-end (Zed 1.24.2, V 0.5.2, VLS 0.0.3).
   # V 0.5.2 ...
   ```
 
-- VLS: comes with the extension. A `PATH` install is still respected
-  as fallback (verified end-to-end on `VLS 0.0.3`); otherwise the pinned
-  build downloads once — approve Zed's one-time download prompt when it
-  appears. To install VLS yourself
-  (takes a few minutes to compile from source):
+- VLS: the official language server shipped with the V toolchain. Install
+  it once, then make sure `vls` is on `PATH`:
 
   ```sh
   v ls --install
@@ -29,19 +26,17 @@ Every step below was verified end-to-end (Zed 1.24.2, V 0.5.2, VLS 0.0.3).
   # VLS 0.0.3
   ```
 
-  (Older guides mention `v build-vls`; current V provides it as
-  `v ls --install`.) Launch Zed from a shell where `vls` resolves —
-  the extension inherits Zed's `PATH`.
+  `v ls --install` places the binary under `~/.vls`. The extension
+  resolves `vls` from `PATH` and speaks LSP stdio, so it always tracks
+  the VLS that matches your compiler. A custom build is respected as long
+  as its `vls` is first on `PATH`. Launch Zed from a shell where `vls`
+  resolves — the extension inherits Zed's `PATH`.
 
 ### Version compatibility
 
-`v ls` has shipped since V 0.3.1 (PR `vlang/v#15009`, commit `235ef23`,
-2022-07-11); `v build-vls` never existed as a subcommand. Verified
-end-to-end on V 0.5.2 + VLS 0.0.3. The newer GitHub VLS tag `0.3` is not
-a drop-in upgrade with current V (see
-[Troubleshooting](./troubleshooting.md#vls-03-is-not-a-drop-in-upgrade)).
-The extension itself is version-agnostic: it resolves `vls` on `PATH`
-and speaks LSP stdio.
+Verified end-to-end on V 0.5.2 + VLS 0.0.3 (from `v ls --install`).
+`v ls` has shipped since V 0.3.1. The extension is version-agnostic: it
+resolves `vls` on `PATH` and speaks LSP stdio.
 
 - Rust with the wasm targets, so Zed can compile the extension:
 
@@ -56,54 +51,49 @@ and speaks LSP stdio.
    `rustup default stable` there, and confirm
    `rustup target list --installed` shows both wasm targets.
 
-## Configure VLS (limited)
+## Configure VLS
 
-VLS understands exactly **two** settings, both booleans, read from a pushed
-LSP `workspace/didChangeConfiguration` under a `vls` key:
+VLS reads its settings from a pushed LSP `workspace/didChangeConfiguration`
+under a `vls` key. The extension forwards `language_servers.vls.settings`
+verbatim via `language_server_workspace_configuration`. Both the flat and
+the nested shapes are accepted.
+
+Top-level keys:
 
 - `inlayHints` — show inlay type hints for inferred types
+  (`variableTypes`, `parameterNames` as nested booleans)
 - `diagnostics` — run live compile-time diagnostics while editing
+- `defines` — compile-time defines, e.g. `["-d", "flag"]`
+- `coverageDirectory` — directory a `v -coverage` run recorded into;
+  VLS reads it to offer "Generate test" code actions
 
 Set them under `language_servers`, in your `settings.json`:
 
 ```json
 {
   "language_servers": {
-    "vls": { "settings": { "vls": { "inlayHints": false, "diagnostics": true } } }
+    "vls": {
+      "settings": {
+        "vls": {
+          "inlayHints": true,
+          "diagnostics": true,
+          "defines": [],
+          "coverageDirectory": ""
+        }
+      }
+    }
   }
 }
 ```
 
-Three corrections to what this page used to say, each measured against the
-running server rather than inferred:
+A project may also set these in a `vls.json` next to its `v.mod`; the
+editor tier wins over the project tier. The keys are camelCase
+(`inlayHints`), matching VLS's JSON tags.
 
-- **There is no `coverageDirectory` setting, and no coverage support at
-  all.** It was listed here from a guess. The pinned VLS contains zero
-  references to coverage anywhere in its source, so the setting does not
-  exist, the feature does not exist, and there is nothing to point it at.
-  (Upstream `vscode-vlang` does expose `v.vls.coverage.enabled`, which makes
-  *its own* extension run and parse `v cover` — it is not a VLS capability
-  this extension can borrow.) Coverage therefore stays a `v cover` recipe in
-  `docs/tests.md`.
-- **The key is camelCase `inlayHints`.** The snake_case `inlay_hints` used for
-  the field in V's own source is *not* accepted — that is what the `@[json:
-  'inlayHints']` attribute on the field is for.
-- **Both the nested and the flat shapes do work.** An earlier version of this
-  page reported that Zed 1.24.2 changed nothing. That measurement was taken
-  against stock VLS 0.0.3 from `v ls --install`, which has none of the
-  compatibility shapes; the pinned build does. Driving the live server,
-  `{"settings":{"vls":{"inlayHints":false}}}` takes the inlay-hint count from
-  1 to 0, and `{"settings":{"vls":{"inlayHints":true}}}` brings it back.
-
-The extension now forwards `language_servers.vls.settings` to VLS verbatim
-via `language_server_workspace_configuration`. It cannot yet supply a JSON
-Schema for them, so there is no settings UI for these two keys: Zed only added
-`language_server_workspace_configuration_schema` in the 0.8.0 API, which is
-not published. Until 0.8.0 ships, the JSON above is the way to set them.
-
-If you use a `PATH` VLS from stock V 0.5.x instead of the pinned build, check
-its source before trusting any of this — the settings surface above is the
-pinned fork's, and older VLS does not have these compat shapes.
+The extension cannot yet supply a JSON Schema for these keys: Zed only
+added `language_server_workspace_configuration_schema` in the 0.8.0 API,
+which is not published. Until 0.8.0 ships, the JSON above is the way to
+set them.
 
 ## 2. Install the dev extension
 

@@ -1,6 +1,6 @@
 id = "vlang"
 name = "V language support"
-version = "0.7.0"
+version = "0.8.0"
 schema_version = 1
 authors = ["metif12 <metif12@gmail.com>"]
 description = "V language support for Zed: syntax highlighting, VLS language server, snippets and tasks"
@@ -14,3 +14,9 @@ rev = "ed235d6c43c9e29ebcabe8c237cc6823599201c5"
 [language_servers.vls]
 name = "VLS"
 languages = ["V"]
+
+[context_servers.vls]
+name = "VLS"
+
+[context_servers.v]
+name = "V Compiler"
